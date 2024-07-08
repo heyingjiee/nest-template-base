@@ -1,0 +1,13 @@
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(public readonly appService: AppService) {}
+
+  @Get()
+  async getHello(): Promise<string> {
+    const res = await this.appService.getHello();
+    return res;
+  }
+}
