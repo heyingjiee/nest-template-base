@@ -22,7 +22,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "pnpm lint"
     ]
   },
