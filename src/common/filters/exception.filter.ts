@@ -7,7 +7,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { CustomLogger } from '../modules/logger.module';
+import { CustomLogger } from '../logger/logger.module';
 
 @Catch()
 @Injectable()

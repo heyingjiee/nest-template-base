@@ -7,7 +7,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import * as md5 from 'md5';
 import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
-import { CustomLogger } from '../common/modules/logger.module';
+import { CustomLogger } from '../common/logger/logger.module';
 
 @Injectable()
 export class UserService {

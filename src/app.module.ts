@@ -2,24 +2,23 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ormConfig } from './common/configs/db.config';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RedisModule } from './common/modules/redis.module';
-import { redisConfig } from './common/configs/redis.config';
 import { LoginGuard } from './user/login.guard';
 import { PermissionGuard } from './user/permission.guard';
-import { LoggerModule } from './common/modules/logger.module';
+import { LoggerModule } from './common/logger/logger.module';
 import { ExceptionFilter } from './common/filters/exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import appConfig from './common/configs/config';
 
 @Module({
   imports: [
     UserModule,
-    TypeOrmModule.forRoot(ormConfig),
+    TypeOrmModule.forRoot(appConfig.ormConfig),
     RedisModule.forRoot({
       global: true,
-      redisConfig,
+      redisConfig: appConfig.redisConfig,
     }),
     LoggerModule.forRoot({ global: true }),
     JwtModule.register({

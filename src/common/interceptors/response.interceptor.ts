@@ -6,7 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable, tap } from 'rxjs';
-import { CustomLogger } from '../modules/logger.module';
+import { CustomLogger } from '../logger/logger.module';
 import { Request, Response } from 'express';
 
 interface Data<T> {

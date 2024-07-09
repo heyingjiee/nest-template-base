@@ -50,7 +50,7 @@ export class CustomLogger implements LoggerService {
         new transports.DailyRotateFile({
           level: 'info',
           format: format.combine(format.json()),
-          dirname: 'log',
+          dirname: 'logs',
           filename: '%DATE%.log',
           datePattern: 'YYYY-MM-DD', // 设置文件名中的%DATE%的格式
           maxSize: '10M', // 当个日志文件大小
@@ -60,14 +60,14 @@ export class CustomLogger implements LoggerService {
       // 所有未捕获的异常都将被记录到 'error.log' 文件中
       exceptionHandlers: [
         new transports.File({
-          dirname: 'log',
+          dirname: 'logs',
           filename: 'global-error.log',
         }),
       ],
       // 所有未处理的 Promise 拒绝都将被记录到 'rejections.log' 文件中
       rejectionHandlers: [
         new transports.File({
-          dirname: 'log',
+          dirname: 'logs',
           filename: 'global-error.log',
         }),
       ],

@@ -1,9 +1,8 @@
-// import { MyLogger } from './common/logger/MyLogger';
 import * as cors from 'cors';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
-import { CustomLogger } from './common/modules/logger.module';
+import { CustomLogger } from './common/logger/logger.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

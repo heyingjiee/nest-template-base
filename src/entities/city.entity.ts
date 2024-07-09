@@ -4,8 +4,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Tree,
-  TreeChildren,
-  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 
