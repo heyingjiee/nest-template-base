@@ -12,7 +12,7 @@ import { CustomLogger } from '../logger/logger.module';
 @Catch()
 @Injectable()
 export class ExceptionFilter implements ExceptionFilter {
-  @Inject(CustomLogger)
+  @Inject()
   private readonly logger: CustomLogger;
 
   catch(exception: Error, host: ArgumentsHost) {

@@ -1,17 +1,21 @@
-import * as cors from 'cors';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { CustomLogger } from './common/logger/logger.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true, // 所有的日志都会被放入缓冲区直到一个自定义的日志记录器被接入
   });
 
   app.useLogger(app.get(CustomLogger)); // 接入日志记录器
 
-  app.use(cors());
+  // 启用跨域
+  app.enableCors();
+
+  // 静态资源服务器 （create传入泛型NestExpressApplication，才有这个方法）
+  app.useStaticAssets('pages');
 
   // Swagger 接口文档
   const config = new DocumentBuilder()

@@ -17,7 +17,7 @@ export class UserService {
   @InjectEntityManager()
   private readonly entityManager: EntityManager;
 
-  @Inject(CustomLogger)
+  @Inject()
   private readonly logger: CustomLogger;
 
   async login(loginUserDto: LoginUserDto) {

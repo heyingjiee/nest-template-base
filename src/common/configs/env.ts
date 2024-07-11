@@ -16,7 +16,7 @@ export default {
       password: 'hedaodao',
       database: 'nest_practice', // 数据库名（也叫schema）。这里指定的数据库需要存在，否则会报错
       synchronize: true, // 是否自动同步entities内的实体到数据库
-      logging: true, // 打印生成的sql语句
+      logging: false, // 打印生成的sql语句
       entities: [User, Role, Permission], // 支持glob ['./**/entities/*.ts']、实体Class。注意配置为glob，synchronize失效，无法自动同步
       poolSize: 10, // 连接池中连接的最大数量
       connectorPackage: 'mysql2', // 指定用什么驱动包。这里用的是mysql2，所以需要安装 npm install --save mysql2
