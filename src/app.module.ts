@@ -8,15 +8,21 @@ import { RedisModule } from './common/modules/redis.module';
 import { LoginGuard } from './user/login.guard';
 import { PermissionGuard } from './user/permission.guard';
 import { CustomLogger, LoggerModule } from './common/logger/logger.module';
-import { ExceptionFilter } from './common/filters/exception.filter';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import appConfig from './common/configs/config';
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { ExceptionFilter } from './common/filters/exception.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
     UserModule,
+    ServeStaticModule.forRoot({
+      rootPath: appConfig.staticAssetDir,
+      serveRoot: '/static', // http://127.0.0.1:3000/static/socket.html 就能访问到 src/public下的文件了
+    }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(appConfig.ormConfig),
     RedisModule.forRoot({
@@ -29,6 +35,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
       secret: 'hedaodao', // 秘钥
     }),
     SchedulerModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [

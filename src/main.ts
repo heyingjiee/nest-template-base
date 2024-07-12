@@ -14,9 +14,6 @@ async function bootstrap() {
   // 启用跨域
   app.enableCors();
 
-  // 静态资源服务器 （create传入泛型NestExpressApplication，才有这个方法）
-  app.useStaticAssets('pages');
-
   // Swagger 接口文档
   const config = new DocumentBuilder()
     .setTitle('Nest-Example项目')
@@ -26,6 +23,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document); // 第一个参数是path， swagger文档地址 http://localhost:3000/${path}
 
-  await app.listen(3002);
+  await app.listen(3000);
 }
 bootstrap();

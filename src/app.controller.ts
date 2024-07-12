@@ -23,6 +23,11 @@ export class AppController {
       childProcess.stdout.on('data', (str) => {
         observer.next({ data: str });
       });
+
+      // 在Observable被取消订阅时触发
+      return () => {
+        console.log('客户端断开SSE连接');
+      };
     });
   }
 }

@@ -9,12 +9,18 @@ import { resolve } from 'node:path';
 // 项目根目录
 const rootDir = resolve(__dirname, '../../../');
 
+const sourceDir = `${rootDir}/src`;
+
+const logDir = `${rootDir}/logs`;
+
 const envConfig: GlobalEnvConfigType = env[process.env.NODE_ENV];
 console.log('环境', process.env.NODE_ENV);
 
 const appConfig: GlobalConfigType = {
   rootDir,
-  logDir: `${rootDir}/logs`,
+  sourceDir,
+  logDir,
+  staticAssetDir: `${sourceDir}/public`,
   ...envConfig,
 };
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>实时日志</title>
+</head>
+<body>
+
+  <h2> 实时日志 </h2>
+  <button id="close-btn">关闭SSE</button>
+  <div id="loggerContainer" style="width:80vw;height:80vh;border:solid black 1px;padding:20px;border-radius:8px;overflow: scroll"></div>
+</body>
+
+<script>
+  const container= document.getElementById('loggerContainer')
+  const eventSource= new EventSource('http://127.0.0.1:3000/real-time-log')
+  // 连接建立时触发
+  eventSource.onopen = function () {
+    console.log("连接成功");
+  };
+
+  // 接收到服务器端发送的数据时触发
+  eventSource.onmessage = ({ data }) => { // data是字符串类型
+    console.log(data);
+    let item= document.createElement('div')
+    item.innerText=data
+    container.appendChild(item)
+  };
+
+  // onerror：连接出错时触发
+  eventSource.onerror = function () {
+    console.log("连接失败");
+  };
+
+
+  document.getElementById('close-btn').onclick=()=>{
+    eventSource.close()
+  }
+
+</script>
+</html>

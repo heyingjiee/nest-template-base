@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket</title>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <button id="close-btn">断开socket连接</button>
+</body>
+<script>
+  const socket = io('http://localhost:3000');
+
+  // 建立连接事件
+  socket.on('connect', function() {
+    console.log('建立连接');
+
+    // 与 /socketTest1 建立连接
+    socket.emit('socketTest1', response =>
+      console.log('socketTest1', response),
+    );
+
+    // 与 /socketTest2 建立连接，发送参数
+    socket.emit('socketTest2', 1, response =>
+      console.log('socketTest2', response)
+    );
+
+    // 与 /socketTest3 建立连接，发送对象参数
+    socket.emit('socketTest3',{id: 2, name: 'dong'},response =>
+      console.log('socketTest3', response),
+    );
+
+
+  });
+
+  // 断开连接事件
+  socket.on('disconnect', function() {
+    console.log('断开连接');
+  });
+
+  // 断开链接
+  const closeBtn= document.getElementById('close-btn')
+  closeBtn.onclick=()=>{
+    socket.disconnect()
+  }
+</script>
+</html>

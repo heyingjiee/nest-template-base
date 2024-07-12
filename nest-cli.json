@@ -4,7 +4,13 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["src/pages/**/*.html"],
-    "watchAssets": true
+    "assets": [
+      {
+      "include": "public/**/*",
+      "outDir": "dist/src",
+      "watchAssets": true
+      }
+    ]
+
   }
 }
