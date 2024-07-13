@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "hedaodao",
   "scripts": {
+    "prepare": "npx husky install",
     "build": "nest build",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:qa": "pnpm build && pm2 start ecosystem.config.cjs --env qa",
@@ -17,8 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky install"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "lint-staged": {
     "*.ts": [
