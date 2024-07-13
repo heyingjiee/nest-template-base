@@ -24,20 +24,31 @@ jobs:
          cp -r Dockerfile ./dist
          cp -r ecosystem.config.cjs ./dist
 
-      - name: Upload Dist
-        uses: dj-256/github-deploy@v1
+      - name: Deploy Dist
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
           # 服务器域名
           host: ${{ secrets.TENCENT_IP }}
           # 服务器端口
           port: 22
           # 服务器用户名
-          username: ${{ secrets.TENCENT_USERNAME }}
+          user: ${{ secrets.TENCENT_USERNAME }}
           # 服务器密码
-          password: ${{ secrets.TENCENT_PASSWORD }}
+          pass: ${{ secrets.TENCENT_PASSWORD }}
+          first_ssh: |
+            mkdir -p /app 
+            rm -rf /app/*
           # 上传服务器目录
-          remote: /app
-          local: ./dist
+          scp: |
+           ./dist => /app
+          last_ssh: |
+            cd /app
+            docker stop nest_container || true
+            docker rm nest_container || true
+            docker build -t nest-image:latest .
+            docker run -d --name nest_container -p 3000:3000 nest-image:latest
+            
+
 
 
 
