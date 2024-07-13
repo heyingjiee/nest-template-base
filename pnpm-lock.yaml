@@ -50,6 +50,12 @@ dependencies:
   chalk:
     specifier: '4'
     version: 4.1.2
+  class-transformer:
+    specifier: ^0.5.1
+    version: 0.5.1
+  class-validator:
+    specifier: ^0.14.1
+    version: 0.14.1
   compressing:
     specifier: ^1.10.1
     version: 1.10.1
@@ -139,12 +145,6 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.0.0
     version: 6.21.0(eslint@8.57.0)(typescript@5.4.5)
-  class-transformer:
-    specifier: ^0.5.1
-    version: 0.5.1
-  class-validator:
-    specifier: ^0.14.1
-    version: 0.14.1
   eslint:
     specifier: ^8.42.0
     version: 8.57.0
