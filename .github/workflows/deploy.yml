@@ -12,10 +12,10 @@ jobs:
       - name: Checkout # 检出仓库，检出的是Head分支
         uses: actions/checkout@v3
 
-      - name: 上传项目
-        uses: srueda99/scp-action@v12
+      - name: Upload Project
+        uses: dj-256/github-deploy@v1
         with:
-          # 服务器域名 
+          # 服务器域名
           host: ${{ secrets.TENCENT_IP }}
           # 服务器端口
           port: 22
@@ -23,8 +23,9 @@ jobs:
           username: ${{ secrets.TENCENT_USERNAME }}
           # 服务器密码
           password: ${{ secrets.TENCENT_PASSWORD }}
-          # 指定上传服务器目录
-          destination: '/dist'
+          # 上传服务器目录
+          remote: /dist
+          local: ./
           script: |
             # 更新Docker镜像（如果镜像已存在则需要先删除旧镜像）
             cd /dist
