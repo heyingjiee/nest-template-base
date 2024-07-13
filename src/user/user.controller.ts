@@ -1,11 +1,14 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpStatus,
   Inject,
   Post,
+  Req,
   Res,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -13,8 +16,11 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { responseSuccess } from '../utils/responseUtil';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RequireLogin } from '../common/decorator/require-login.decorator';
+import { RequirePermission } from '../common/decorator/require-permission.decorator';
+import { User } from './entities/user.entity';
 
 @ApiTags('user')
 @Controller('user')
@@ -30,22 +36,20 @@ export class UserController {
   //   return responseSuccess(null);
   // }
 
-  // @RequireLogin()
-  // @RequirePermission('add')
-  @Get('aaa')
+  @ApiOperation({
+    summary: '测试接口',
+    description:
+      '装饰器 RequireLogin 设置接口需登录、RequirePermission 设置接口权限',
+  })
+  @RequireLogin()
+  @RequirePermission('add')
+  @Get('test')
   handlerAAA() {
     return responseSuccess(null);
   }
 
-  // 接口概述
-  @ApiOperation({
-    summary: '登录接口',
-    description: '用于用户登录',
-  })
-  @ApiBody({
-    type: LoginUserDto,
-  })
-
+  @ApiOperation({ summary: '登录接口', description: '用于用户登录' })
+  @ApiBody({ type: LoginUserDto })
   // 添加返回值用例
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,14 +62,7 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const foundUser = await this.userService.login(loginUserDto);
-    const accessToken = await this.jwtService.signAsync(
-      {
-        userId: foundUser.id,
-        username: foundUser.username,
-      },
-      { expiresIn: '30m' },
-    );
-    const refreshToken = await this.jwtService.signAsync(
+    const token = await this.jwtService.signAsync(
       {
         userId: foundUser.id,
         username: foundUser.username,
@@ -73,15 +70,35 @@ export class UserController {
       { expiresIn: '7d' },
     );
 
-    res.setHeader('access_token', accessToken);
-    res.setHeader('refresh_token', refreshToken);
+    res.setHeader('token', token);
 
     return responseSuccess(null);
   }
 
+  @ApiOperation({ summary: '注册接口', description: '用于用户注册' })
+  @ApiBody({ type: RegisterUserDto })
   @Post('register')
   async register(@Body(ValidationPipe) registerUserDto: RegisterUserDto) {
     await this.userService.register(registerUserDto);
     return responseSuccess(null, '注册成功');
+  }
+
+  @ApiOperation({
+    summary: '用户信息',
+    description: '查询用户自己的非隐私信息',
+  })
+  @ApiBody({ type: RegisterUserDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: User,
+  })
+  @RequireLogin()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('profile')
+  async handleUserInfo(@Req() req: Request) {
+    // @RequireLogin() 校验通过的，request上都携带了userId
+    return responseSuccess(
+      await this.userService.findRolesByUserId(req.userId),
+    );
   }
 }

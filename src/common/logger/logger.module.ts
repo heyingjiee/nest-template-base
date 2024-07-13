@@ -29,11 +29,10 @@ export class LoggerModule {
 @Injectable()
 export class CustomLogger implements LoggerService {
   private logger: Logger;
-
   constructor() {
-    this.logger = createLogger({
-      level: 'info',
-      transports: [
+    let transportList = [];
+    if (process.env.NODE_ENV === 'dev') {
+      transportList = [
         new transports.Console({
           format: format.combine(
             format.printf((param) => {
@@ -48,6 +47,9 @@ export class CustomLogger implements LoggerService {
             }),
           ),
         }),
+      ];
+    } else {
+      transportList = [
         new transports.DailyRotateFile({
           level: 'info',
           format: format.combine(format.json()),
@@ -57,21 +59,26 @@ export class CustomLogger implements LoggerService {
           maxSize: '10M', // 当个日志文件大小
           maxFiles: '14d', // 文件保存天数
         }),
-      ],
+      ];
+    }
+
+    this.logger = createLogger({
+      level: 'info',
+      transports: transportList,
       // 所有未捕获的异常都将被记录到 'error.log' 文件中
-      exceptionHandlers: [
-        new transports.File({
-          dirname: appConfig.logDir,
-          filename: 'global-error.log',
-        }),
-      ],
+      // exceptionHandlers: [
+      //   new transports.File({
+      //     dirname: appConfig.logDir,
+      //     filename: 'global-error.log',
+      //   }),
+      // ],
       // 所有未处理的 Promise 拒绝都将被记录到 'rejections.log' 文件中
-      rejectionHandlers: [
-        new transports.File({
-          dirname: appConfig.logDir,
-          filename: 'global-error.log',
-        }),
-      ],
+      // rejectionHandlers: [
+      //   new transports.File({
+      //     dirname: appConfig.logDir,
+      //     filename: 'global-error.log',
+      //   }),
+      // ],
       // 默认值是 true，表示在记录未捕获的异常后退出进程
       exitOnError: true,
     });

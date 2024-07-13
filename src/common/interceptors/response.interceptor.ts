@@ -27,20 +27,17 @@ export class ResponseInterceptor<T> implements NestInterceptor {
     const request: Request = host.getRequest();
     const response: Response = host.getResponse();
 
-    const noResponseLogger = this.reflector.getAllAndOverride(
-      'no-response-log',
-      [
-        context.getClass(), // 获取class的元数据
-        context.getHandler(), // 获取handler的元数据
-      ],
-    ) as boolean | undefined;
+    const noResponseLog = this.reflector.getAllAndOverride('no-response-log', [
+      context.getClass(), // 获取class的元数据
+      context.getHandler(), // 获取handler的元数据
+    ]) as boolean | undefined;
 
     const { method, path } = request;
 
     this.logger.log(`[${path}][${method}]`, '请求');
     return next.handle().pipe(
       tap((res) => {
-        if (!noResponseLogger) {
+        if (!noResponseLog) {
           this.logger.log(
             `[${path}][${method}][${response.statusCode}]${JSON.stringify(res)}`,
             '响应',
