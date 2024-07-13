@@ -5,6 +5,7 @@ on:
   pull_request:
     branches: [deploy]
 
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -31,6 +32,13 @@ jobs:
           overwrite: true
           # 删除指定数量的前导路径元素
           strip_components: 1
+          script: |
+            # 更新Docker镜像（如果镜像已存在则需要先删除旧镜像）
+            cd /dist
+            docker build -t nest-image:latest .
+            docker stop nest_container || true 
+            docker rm nest_container || true
+            docker run -d --name nest_container -p 3000:3000 nest-image:latest
 
 
 
