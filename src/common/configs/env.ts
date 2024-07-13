@@ -44,11 +44,11 @@ export default {
   },
   prod: {
     redisConfig: {
-      host: '127.0.0.1',
+      host: 'redis-container',
       port: 6379,
     },
     ormConfig: {
-      type: 'mysql', // 数据库类型，TypeORM目前支持mysql、 postgres、oracle、sqllite等
+      type: 'mysql-container', // 数据库类型，TypeORM目前支持mysql、 postgres、oracle、sqllite等
       host: 'localhost',
       port: 3306,
       username: 'root',
