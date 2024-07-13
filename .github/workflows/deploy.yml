@@ -40,7 +40,7 @@ jobs:
             rm -rf /app/*
           # 上传服务器目录
           scp: |
-           ./dist => /app
+           ./dist/* => /app
           last_ssh: |
             cd /app
             docker stop nest_container || true
