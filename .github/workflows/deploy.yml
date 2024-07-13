@@ -46,7 +46,7 @@ jobs:
             docker stop nest_container || true
             docker rm nest_container || true
             docker build -t nest-image:latest .
-            docker run -d --name nest_container -p 3000:3000 nest-image:latest
+            docker run -d --name nest_container -p 3000:3000 nest-image:latest prod
             
 
 

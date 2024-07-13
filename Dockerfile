@@ -1,9 +1,10 @@
-# production stage
-FROM node:18 as production-stage
+FROM node:18
 
+RUN mkdir /app
 WORKDIR /app
+COPY . .
 
-RUN npm config set registry https://registry.npmmirror.com/ && npm install -g pnpm && pnpm install --production
+RUN npm config set registry https://registry.npmmirror.com/ && npm install -g pnpm && npm install -g pm2 && pnpm install --production
 
 EXPOSE 3000
 
