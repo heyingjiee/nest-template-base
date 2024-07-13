@@ -15,7 +15,6 @@ import { ExceptionFilter } from './common/filters/exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SocketModule } from './socket/socket.module';
-import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -37,7 +36,6 @@ import { EmailModule } from './email/email.module';
     }),
     SchedulerModule,
     SocketModule,
-    EmailModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-
+[![Deploy](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml/badge.svg)](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml)
 ## 安装依赖
 
 ```bash
