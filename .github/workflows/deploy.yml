@@ -12,7 +12,17 @@ jobs:
       - name: Checkout # 检出仓库，检出的是Head分支
         uses: actions/checkout@v3
 
-      - name: Upload Project
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Build
+        run: |
+         pnpm build
+         cp -r package.json ./dist
+         cp -r Dockerfile ./dist
+         cp -r ecosystem.config.cjs ./dist
+
+      - name: Upload Dist
         uses: dj-256/github-deploy@v1
         with:
           # 服务器域名
@@ -24,15 +34,9 @@ jobs:
           # 服务器密码
           password: ${{ secrets.TENCENT_PASSWORD }}
           # 上传服务器目录
-          remote: /dist
-          local: ./
-          script: |
-            # 更新Docker镜像（如果镜像已存在则需要先删除旧镜像）
-            cd /dist
-            docker build -t nest-image:latest .
-            docker stop nest_container || true 
-            docker rm nest_container || true
-            docker run -d --name nest_container -p 3000:3000 nest-image:latest
+          remote: /app
+          local: ./dist
+
 
 
 
