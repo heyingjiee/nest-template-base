@@ -9,8 +9,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout # 检出仓库，检出的是Head分支
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3 # 检出仓库，检出的是Head分支
+      - uses: pnpm/action-setup@v2 # 设置pnpm
+        with:
+          version: 8
 
       - name: Install Dependencies
         run: pnpm i
