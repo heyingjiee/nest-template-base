@@ -5,7 +5,6 @@ on:
   pull_request:
     branches: [deploy]
 
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,24 +13,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 上传项目
-        uses: appleboy/scp-action@master
+        uses: srueda99/scp-action@v12
         with:
-          # 服务器域名
+          # 服务器域名 
           host: ${{ secrets.TENCENT_IP }}
+          # 服务器端口
+          port: 22
           # 服务器用户名
           username: ${{ secrets.TENCENT_USERNAME }}
           # 服务器密码
           password: ${{ secrets.TENCENT_PASSWORD }}
-          # 服务器端口
-          port: 22
-          # 指定上传的文件目录
-          source: './dist'
           # 指定上传服务器目录
-          target: '/dist'
-          # 解压时覆盖现有文件
-          overwrite: true
-          # 删除指定数量的前导路径元素
-          strip_components: 1
+          destination: '/dist'
           script: |
             # 更新Docker镜像（如果镜像已存在则需要先删除旧镜像）
             cd /dist
