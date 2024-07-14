@@ -1,10 +1,10 @@
 #FROM node:18
-FROM node:18.0-alpine3.14
+FROM node:18-alpine3.19
 RUN mkdir /app
 WORKDIR /app
 COPY . .
 
-RUN npm config set registry https://registry.npmmirror.com/ && npm install -g pnpm && npm install -g pm2 && pnpm install --production
+RUN npm config set registry https://registry.npmmirror.com && npm install -g pnpm && npm install -g pm2 && pnpm install --production
 
 EXPOSE 3000
 
