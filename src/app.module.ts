@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule } from './common/modules/redis.module';
 import { LoginGuard } from './user/login.guard';
 import { PermissionGuard } from './user/permission.guard';
 import { CustomLogger, LoggerModule } from './common/logger/logger.module';
@@ -15,6 +14,7 @@ import { ExceptionFilter } from './common/filters/exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SocketModule } from './socket/socket.module';
+import { RedisModule } from './common/modules/redis.module';
 
 @Module({
   imports: [

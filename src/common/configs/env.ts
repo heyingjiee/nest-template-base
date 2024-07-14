@@ -10,7 +10,7 @@ export default {
     },
     ormConfig: {
       type: 'mysql', // 数据库类型，TypeORM目前支持mysql、 postgres、oracle、sqllite等
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: 'hedaodao',
