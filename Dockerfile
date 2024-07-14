@@ -1,5 +1,5 @@
-FROM node:18
-
+#FROM node:18
+FROM node:18.0-alpine3.14
 RUN mkdir /app
 WORKDIR /app
 COPY . .

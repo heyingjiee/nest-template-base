@@ -43,10 +43,11 @@ jobs:
            ./dist/* => /app
           last_ssh: |
             cd /app
-            docker stop nest_container || true
-            docker rm nest_container || true
+            docker rmi nest-image || true
+            docker stop nest-container || true
+            docker rm nest-container || true
             docker build -t nest-image:latest .
-            docker run -d --name nest_container -p 3000:3000 nest-image:latest prod
+            docker run -d --name nest-container -p 3000:3000 nest-image:latest prod
             
 
 
