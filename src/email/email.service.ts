@@ -9,14 +9,14 @@ export class EmailService {
       port: 587,
       secure: false,
       auth: {
-        user: '1270433876@qq.com',
-        pass: 'jqjjojazitkiifda',
+        user: 'xxx@qq.com',
+        pass: 'xxx',
       },
     });
 
     await transporter.sendMail({
-      from: '1270433876@qq.com', // 这里必须和user字段一致
-      to: 'heyingjie@yiche.com', // 目标地址
+      from: 'xxx@qq.com', // 这里必须和user字段一致
+      to: 'xxx@xxx.com', // 目标地址
       subject: '测试邮件', // 标题
       text: '自动发送，请勿回复', // 内容
     });
