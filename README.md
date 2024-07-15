@@ -4,7 +4,14 @@
 
 [![Deploy](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml/badge.svg)](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml)
 
-## 介绍
+## 待办
+- [ ] 文件处理Demo（）
+- [ ] 集成爬虫模块
+- [ ] passport实现用户鉴权、扫码登录
+- [ ] 微服务、Monorepo模版
+
+
+## 集成工具
 
 ### Husky
 项目已集成 Eslint、Prettier、Commitlint，Git提交时进行校验
@@ -19,7 +26,17 @@ http://127.0.0.1:3000/doc
 $ pnpm run compodoc
 ```
 
-### 请求工具
+### Typeorm、Redis
+Typeorm使用nest提供的动态模块   
+项目中将Redis也封装为了动态模块
+```ts
+export class Xxx {
+  @Inject('REDIS')
+  private readonly redis: Redis;
+}
+```
+
+### Axios请求工具
 参考接口：/axios-example
 ```ts
 export class Xxx {
@@ -35,7 +52,7 @@ export class Xxx {
   private readonly logger: CustomLogger;
 }
 ```
-发起三方请求、响应日志已集成到日志中
+发起三方请求、响应日志已集成到日志中(使用Axios发起请求)
 ```text
 [Nest] [2024-07-16 00:21:38] [info] [外部请求] [GET][https://httpbin.org/get]
 [Nest] [2024-07-16 00:21:39] [info] [外部响应] [GET][https://httpbin.org/get][200] 接口响应内容
@@ -45,12 +62,21 @@ export class Xxx {
 [Nest] [2024-07-16 00:24:14] [info] [请求] [POST][/user/login]
 [Nest] [2024-07-16 00:24:14] [info] [响应] [POST][/user/login][201]{"code":0,"data":null,"msg":"ok"}
 ```
+提供装饰器 @NoResponseLog() 关闭项目接口响应日志
 
 ### 静态资源服务器
 资源放置于 /src/public/ 目录下
 ```text
 # 请求静态资源
 http://127.0.0.1:3000/static/xxx
+```
+
+
+## Demo样例
+
+### 基于角色鉴权
+```text
+src/user # user模块实现了 登录拦截器、鉴权拦截器
 ```
 
 ### 邮件样例
