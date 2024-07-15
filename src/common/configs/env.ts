@@ -10,7 +10,7 @@ export default {
     },
     ormConfig: {
       type: 'mysql', // 数据库类型，TypeORM目前支持mysql、 postgres、oracle、sqllite等
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: 'hedaodao',
@@ -44,12 +44,12 @@ export default {
   },
   prod: {
     redisConfig: {
-      host: '127.0.0.1',
+      host: '10.0.16.11',
       port: 6379,
     },
     ormConfig: {
       type: 'mysql', // 数据库类型，TypeORM目前支持mysql、 postgres、oracle、sqllite等
-      host: 'localhost',
+      host: '10.0.16.11',
       port: 3306,
       username: 'root',
       password: 'hedaodao',

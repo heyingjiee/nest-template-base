@@ -9,28 +9,48 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout # 检出仓库，检出的是Head分支
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3 # 检出仓库，检出的是Head分支
+      - uses: pnpm/action-setup@v4 # 设置pnpm
+        with:
+          version: 8
 
-      - name: 上传项目
-        uses: appleboy/scp-action@master
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Build
+        run: |
+         pnpm build
+         cp -r package.json ./dist
+         cp -r Dockerfile ./dist
+         cp -r ecosystem.config.cjs ./dist
+
+      - name: Deploy Dist
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
           # 服务器域名
           host: ${{ secrets.TENCENT_IP }}
-          # 服务器用户名
-          username: ${{ secrets.TENCENT_USERNAME }}
-          # 服务器密码
-          password: ${{ secrets.TENCENT_PASSWORD }}
           # 服务器端口
           port: 22
-          # 指定上传的文件目录
-          source: './dist'
-          # 指定上传服务器目录
-          target: '/dist'
-          # 解压时覆盖现有文件
-          overwrite: true
-          # 删除指定数量的前导路径元素
-          strip_components: 1
+          # 服务器用户名
+          user: ${{ secrets.TENCENT_USERNAME }}
+          # 服务器密码
+          pass: ${{ secrets.TENCENT_PASSWORD }}
+          first_ssh: |
+            mkdir -p /app 
+            rm -rf /app/*
+          # 上传服务器目录
+          scp: |
+           ./dist/* => /app
+          last_ssh: |
+            cd /app
+            docker rmi nest-image || true
+            docker stop nest-container || true
+            docker rm nest-container || true
+            docker build -t nest-image:latest .
+            docker run -d --name nest-container -p 3000:3000 nest-image:latest prod
+            
+
+
 
 
 

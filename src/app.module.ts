@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule } from './common/modules/redis.module';
 import { LoginGuard } from './user/login.guard';
 import { PermissionGuard } from './user/permission.guard';
 import { CustomLogger, LoggerModule } from './common/logger/logger.module';
@@ -15,11 +14,12 @@ import { ExceptionFilter } from './common/filters/exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SocketModule } from './socket/socket.module';
+import { RedisModule } from './common/modules/redis.module';
 import { EmailModule } from './email/email.module';
+import { AxiosModule } from './common/modules/axios.module';
 
 @Module({
   imports: [
-    UserModule,
     ServeStaticModule.forRoot({
       rootPath: appConfig.staticAssetDir,
       serveRoot: '/static', // http://127.0.0.1:3000/static/socket.html 就能访问到 src/public下的文件了
@@ -35,6 +35,14 @@ import { EmailModule } from './email/email.module';
       global: true, // 设置为全局模块，使用无需import，全局都可以注入
       secret: 'hedaodao', // 秘钥
     }),
+    AxiosModule.forRoot({
+      global: true,
+      axiosConfig: {
+        timeout: 5000,
+        maxRedirects: 5,
+      },
+    }),
+    UserModule,
     SchedulerModule,
     SocketModule,
     EmailModule,

@@ -1,18 +1,17 @@
-FROM node:16
-
-ENV PATH="$PATH:/usr/local/node/bin"
-
+#FROM node:18
+FROM node:18-alpine3.19
 RUN mkdir /app
 WORKDIR /app
-COPY dist .
-COPY ecosystem.config.js .
+COPY . .
 
-RUN ln -s /sbin/runc /usr/bin/runc
+RUN npm config set registry https://registry.npmmirror.com && npm install -g pnpm && npm install -g pm2 && pnpm install --production
 
 EXPOSE 3000
 
 # docker run xxx:xx prod  生产环境
 # docker run xxx:xx qa 测试环境
 # 通过npm启动pm2会报错 PM2 error: TypeError: One of the pids provided is invalid
-CMD ["prod"]
-ENTRYPOINT ["pm2-runtime", "ecosystem.config.js", "--env"]
+CMD ["dev"]
+ENTRYPOINT ["pm2-runtime", "ecosystem.config.cjs", "--env"]
+
+
