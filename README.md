@@ -31,7 +31,7 @@ Typeorm使用nest提供的动态模块
 项目中将Redis也封装为了动态模块
 ```ts
 export class Xxx {
-  @Inject('REDIS')
+  @Inject()
   private readonly redis: Redis;
 }
 ```
@@ -40,7 +40,7 @@ export class Xxx {
 参考接口：/axios-example
 ```ts
 export class Xxx {
-  @Inject('axios')
+  @Inject('Axios')
   private readonly axios: AxiosInstance;
 }
 ```

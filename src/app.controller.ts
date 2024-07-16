@@ -9,14 +9,18 @@ import { NoResponseLog } from './common/decorator/no-response-log.decorator';
 import { AxiosInstance } from 'axios';
 import { responseSuccess } from './utils/responseUtil';
 import { ApiOperation } from '@nestjs/swagger';
+import Redis from 'ioredis';
 
 @Controller()
 export class AppController {
   @Inject()
   private readonly logger: CustomLogger;
 
-  @Inject('axios')
+  @Inject('Axios')
   private readonly axios: AxiosInstance;
+
+  @Inject()
+  private readonly redis: Redis;
   constructor(public readonly appService: AppService) {}
 
   @ApiOperation({
@@ -47,7 +51,7 @@ export class AppController {
   })
   @Get('axios-example')
   async handleAxiosExample() {
-    // https://httpbin.org/#/HTTP_Methods/get_get
+    //测试请求地址 https://httpbin.org/#/HTTP_Methods/get_get
     const res = await this.axios({
       url: 'https://httpbin.org/get',
     });
