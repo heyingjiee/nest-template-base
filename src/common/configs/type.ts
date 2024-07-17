@@ -12,6 +12,8 @@ export interface GlobalEnvConfigType {
   logDir: string;
   // 静态资源路径
   staticAssetDir: string;
+  // 项目名
+  applicationName: string;
   // redis配置
   redisConfig: RedisOptions;
   // 数据库配置

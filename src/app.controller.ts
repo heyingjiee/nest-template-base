@@ -21,6 +21,7 @@ export class AppController {
 
   @Inject()
   private readonly redis: Redis;
+
   constructor(public readonly appService: AppService) {}
 
   @ApiOperation({
@@ -40,7 +41,7 @@ export class AppController {
 
       // 在Observable被取消订阅时触发
       return () => {
-        console.log('客户端断开SSE连接');
+        this.logger.log('客户端断开SSE连接');
       };
     });
   }

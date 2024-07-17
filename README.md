@@ -52,17 +52,24 @@ export class Xxx {
   private readonly logger: CustomLogger;
 }
 ```
-发起三方请求、响应日志已集成到日志中(使用Axios发起请求)
-```text
-[Nest] [2024-07-16 00:21:38] [info] [外部请求] [GET][https://httpbin.org/get]
-[Nest] [2024-07-16 00:21:39] [info] [外部响应] [GET][https://httpbin.org/get][200] 接口响应内容
-```
+
 项目接口请求、响应日志已集成到日志中
 ```text
-[Nest] [2024-07-16 00:24:14] [info] [请求] [POST][/user/login]
-[Nest] [2024-07-16 00:24:14] [info] [响应] [POST][/user/login][201]{"code":0,"data":null,"msg":"ok"}
+[Nest] [2024-07-17 10:25:56.913] [2e81f11d-d3d6-45f1-b692-53f07c175fde] [info] [请求] [POST][/user/login]
+[Nest] [2024-07-17 10:25:56.929] [2e81f11d-d3d6-45f1-b692-53f07c175fde] [info] [响应] [POST][/user/login][201] 接口响应内容
 ```
 提供装饰器 @NoResponseLog() 关闭项目接口响应日志
+
+发起三方请求、响应日志已集成到日志中(使用Axios发起请求)
+```text
+[Nest] [2024-07-17 10:27:10.126] [616864ba-45f6-4768-8747-c66ad5e97e46] [info] [外部请求] [GET][https://httpbin.org/get]
+[Nest] [2024-07-17 10:27:11.326] [616864ba-45f6-4768-8747-c66ad5e97e46] [info] [外部响应] [GET][https://httpbin.org/get][200] 接口响应内容
+```
+
+日志已集成traceId链路追踪
+```text
+Console输出第三位 [616864ba-45f6-4768-8747-c66ad5e97e46] 就是traceId
+```
 
 ### 静态资源服务器
 资源放置于 /src/public/ 目录下

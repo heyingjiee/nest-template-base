@@ -21,6 +21,7 @@ const appConfig: GlobalConfigType = {
   sourceDir,
   logDir,
   staticAssetDir: `${sourceDir}/public`,
+  applicationName: 'Nest',
   ...envConfig,
 };
 

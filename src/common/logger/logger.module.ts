@@ -1,5 +1,6 @@
 import {
   DynamicModule,
+  Inject,
   Injectable,
   LoggerService,
   Module,
@@ -9,6 +10,7 @@ import * as chalk from 'chalk';
 import * as dayjs from 'dayjs';
 import 'winston-daily-rotate-file';
 import appConfig from '../configs/config';
+import { ClsService } from 'nestjs-cls';
 
 interface loggerOption {
   global: boolean;
@@ -29,6 +31,10 @@ export class LoggerModule {
 @Injectable()
 export class CustomLogger implements LoggerService {
   private logger: Logger;
+
+  @Inject()
+  private readonly cls: ClsService;
+
   constructor() {
     let transportList = [];
     if (process.env.NODE_ENV === 'dev') {
@@ -36,14 +42,26 @@ export class CustomLogger implements LoggerService {
         new transports.Console({
           format: format.combine(
             format.printf((param) => {
-              const { context, level, message, time } = param;
-              const appStr = chalk.green('[Nest]');
-              const contextStr = chalk.yellow(`[${context}]`);
-              const levelStr =
-                level === 'info'
-                  ? chalk.green(`[${level}]`)
-                  : chalk.red(`[${level}]`);
-              return `${appStr} [${time}] ${levelStr} ${contextStr} ${message}`;
+              const { time, traceId, context, level, message } = param; // this.logger.xxx(msg,extra)传进来的extra参数。traceId、level、message是默认的元数据
+              const appStr = chalk.green(`[${appConfig.applicationName}]`); // 应用名
+              const timeStr = chalk.magenta(`[${time}]`); // 时间
+              const traceIdStr = chalk.cyan(`[${traceId}]`); // traceId
+              const contextStr = chalk.yellow(`[${context}]`); // 上下文
+
+              let levelStr = '';
+              switch (level) {
+                case 'info':
+                  levelStr = chalk.green(`[${level}]`);
+                  break;
+                case 'warn':
+                  levelStr = chalk.yellow(`[${level}]`);
+                  break;
+                case 'error':
+                  levelStr = chalk.red(`[${level}]`);
+                  break;
+              }
+
+              return `${appStr} ${timeStr} ${traceIdStr} ${levelStr} ${contextStr} ${message}`;
             }),
           ),
         }),
@@ -65,36 +83,30 @@ export class CustomLogger implements LoggerService {
     this.logger = createLogger({
       level: 'info',
       transports: transportList,
-      // 所有未捕获的异常都将被记录到 'error.log' 文件中
-      // exceptionHandlers: [
-      //   new transports.File({
-      //     dirname: appConfig.logDir,
-      //     filename: 'global-error.log',
-      //   }),
-      // ],
-      // 所有未处理的 Promise 拒绝都将被记录到 'rejections.log' 文件中
-      // rejectionHandlers: [
-      //   new transports.File({
-      //     dirname: appConfig.logDir,
-      //     filename: 'global-error.log',
-      //   }),
-      // ],
-      // 默认值是 true，表示在记录未捕获的异常后退出进程
-      exitOnError: true,
+      exitOnError: false,
     });
   }
 
   log(message: any, ...optionalParams: any[]): any {
-    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-    this.logger.log('info', `${message}`, { context: optionalParams[0], time });
+    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
+    this.logger.log('info', `${message}`, {
+      traceId: this.cls.get('traceId') ?? '-',
+      context: optionalParams[0],
+      time,
+    });
   }
   warn(message: any, ...optionalParams: any[]): any {
-    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-    this.logger.log('warn', `${message}`, { context: optionalParams[0], time });
+    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
+    this.logger.log('warn', `${message}`, {
+      traceId: this.cls.get('traceId') ?? '-',
+      context: optionalParams[0],
+      time,
+    });
   }
   error(message: any, ...optionalParams: any[]): any {
-    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+    const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('error', `${message}`, {
+      traceId: this.cls.get('traceId') ?? '-',
       context: optionalParams[0],
       time,
     });
