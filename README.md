@@ -5,7 +5,8 @@
 [![Deploy](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml/badge.svg)](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml)
 
 ## 待办
-- [ ] 文件处理Demo（）
+- [x] 日志集成链路追踪
+- [ ] 文件处理Demo
 - [ ] 集成爬虫模块
 - [ ] passport实现用户鉴权、扫码登录
 - [ ] 微服务、Monorepo模版

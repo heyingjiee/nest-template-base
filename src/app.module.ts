@@ -19,6 +19,7 @@ import { EmailModule } from './email/email.module';
 import { AxiosModule } from './common/modules/axios.module';
 import { ClsModule } from 'nestjs-cls';
 import { v4 as uuidv4 } from 'uuid';
+import { FileOperateModule } from './file-operate/file-operate.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { v4 as uuidv4 } from 'uuid';
     SchedulerModule,
     SocketModule,
     EmailModule,
+    FileOperateModule,
   ],
   controllers: [AppController],
   providers: [
