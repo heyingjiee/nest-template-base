@@ -90,7 +90,7 @@ export class CustomLogger implements LoggerService {
   log(message: any, ...optionalParams: any[]): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('info', `${message}`, {
-      traceId: this.cls.get('traceId') ?? '-',
+      traceId: this.cls.getId() ?? '-',
       context: optionalParams[0],
       time,
     });
@@ -98,7 +98,7 @@ export class CustomLogger implements LoggerService {
   warn(message: any, ...optionalParams: any[]): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('warn', `${message}`, {
-      traceId: this.cls.get('traceId') ?? '-',
+      traceId: this.cls.getId() ?? '-',
       context: optionalParams[0],
       time,
     });
@@ -106,7 +106,7 @@ export class CustomLogger implements LoggerService {
   error(message: any, ...optionalParams: any[]): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('error', `${message}`, {
-      traceId: this.cls.get('traceId') ?? '-',
+      traceId: this.cls.getId() ?? '-',
       context: optionalParams[0],
       time,
     });

@@ -18,7 +18,6 @@ import { RedisModule } from './common/modules/redis.module';
 import { EmailModule } from './email/email.module';
 import { AxiosModule } from './common/modules/axios.module';
 import { ClsModule } from 'nestjs-cls';
-import { v4 as uuidv4 } from 'uuid';
 import { FileOperateModule } from './file-operate/file-operate.module';
 
 @Module({
@@ -49,12 +48,13 @@ import { FileOperateModule } from './file-operate/file-operate.module';
       global: true,
       middleware: {
         mount: true, // 为全部路由增加中间件
-        setup: (cls) => {
-          // cls.set('userId', req.headers['x-user-id']); // 每个请求有独立的作用域，同一个请求上下文共享数据
-          cls.set('traceId', uuidv4());
-        },
-        // generateId: true,
-        // idGenerator: () => uuidv4(),
+        // setup: (cls,req) => {
+        //// 每个请求有独立的作用域，同一个请求上下文共享数据。我们可以出于共享上下文的目的添加想要的数据。业务汇总注入 cls，通过this.cls.get('xxx') 取出来
+        //   cls.set('userId', req.headers['x-user-id']);
+        //   cls.set('traceId', uuidv4());
+        // },
+        generateId: true,
+        // idGenerator: () => uuidv4(), // 可以定义生成的id。例如使用uuid这个包的uuidv4()
       },
     }),
     UserModule,
