@@ -35,7 +35,7 @@
           [...multiFileInput.files].forEach(file => {
             data.append('fileData', file)  // append如果key不存在就创建，存在就是追加。所以一个key能携带多个文件
           })
-          await axios.post('http://localhost:3000/file-operate/multi-upload', data);
+          await axios.post('/file-operate/multi-upload', data);
         }
       </script>
     </div>
@@ -64,7 +64,7 @@
           [...sliceFileInput.files].forEach(file => {
             data.append('fileData', file)  // 多文件即使key一致，也需要多次append
           })
-          await axios.post('http://localhost:3000/file-operate/multi-upload', data);
+          await axios.post('/file-operate/multi-upload', data);
         }
       </script>
     </div>
