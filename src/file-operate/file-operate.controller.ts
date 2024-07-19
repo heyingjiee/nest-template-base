@@ -14,7 +14,8 @@ import { CustomLogger } from '../common/logger/logger.module';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
 import { responseSuccess } from '../utils/responseUtil';
-import { customFileValidator } from '../common/file-validator/file.validator';
+import { customFileTypeValidator } from './file.validator';
+import { storage } from './file-interceptor.storage';
 
 @Controller('file-operate')
 export class FileOperateController {
@@ -27,20 +28,20 @@ export class FileOperateController {
   @UseInterceptors(
     FileInterceptor('fileData', {
       // 使用内置拦截器FileInterceptor（需配合multer包使用）。fileData是上传文件的key，dest是上传文件放置的路径
-      dest: 'uploads', // 相对项目根路径
+      // dest: 'uploads', // 相对项目根路径
+      storage, // 使用multer.diskStorage({}) 创建 StorageEngine。diskStorage中可自定义文件路径、文件名
     }),
   )
-  // @UploadedFile接收文件参数
-  // @Body接收请求体（普通字段+文件字段）
+  // @UploadedFile接收文件参数，@Body接收请求体（普通字段+文件字段）
   singleUploadFile(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 1000,
-            message: '文件大小不能超过1000K',
+            maxSize: 8 * 1024 * 100, // 单位byte
+            message: '文件大小不能超过100KB',
           }),
-          new customFileValidator({
+          new customFileTypeValidator({
             fileTypes: ['image/png'],
             message: '文件类型只能是png',
           }),

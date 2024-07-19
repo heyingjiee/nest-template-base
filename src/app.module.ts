@@ -51,10 +51,10 @@ import { FileOperateModule } from './file-operate/file-operate.module';
         // setup: (cls,req) => {
         //// 每个请求有独立的作用域，同一个请求上下文共享数据。我们可以出于共享上下文的目的添加想要的数据。业务汇总注入 cls，通过this.cls.get('xxx') 取出来
         //   cls.set('userId', req.headers['x-user-id']);
-        //   cls.set('traceId', uuidv4());
+        //   cls.set('traceId', uuid.v4()); // 引入 import * as uuid from 'uuid';
         // },
         generateId: true,
-        // idGenerator: () => uuidv4(), // 可以定义生成的id。例如使用uuid这个包的uuidv4()
+        // idGenerator: () =>  uuid.v4(), // 可以定义生成的id。例如使用uuid这个包的uuidv4()
       },
     }),
     UserModule,

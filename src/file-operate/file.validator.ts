@@ -1,6 +1,3 @@
-/**
- * ParseFilePipe 的 validator
- */
 import { FileValidator } from '@nestjs/common';
 
 interface customFileTypeValidatorOption {
@@ -8,7 +5,10 @@ interface customFileTypeValidatorOption {
   message?: string;
 }
 
-export class customFileValidator extends FileValidator<customFileTypeValidatorOption> {
+/**
+ * ParseFilePipe 的 validator
+ */
+export class customFileTypeValidator extends FileValidator<customFileTypeValidatorOption> {
   constructor(public options: customFileTypeValidatorOption) {
     super(options);
   }

@@ -17,7 +17,7 @@
         singleFileInput.onchange=async ()=> {
           const data = new FormData();
           data.set('name','hedaodao'); // 这里是普通key、value
-          data.set('fileData', singleFileInput.files[0]); // 这里是文件
+          data.set('fileData', singleFileInput.files[0]); // file数组，单选就是第一个元素
           await axios.post('http://localhost:3000/file-operate/single-upload', data);
         }
       </script>
@@ -33,7 +33,7 @@
           const data = new FormData();
           data.set('name','hedaodao'); // 这里是普通key、value
           [...multiFileInput.files].forEach(file => {
-            data.append('fileData', file)  // 多文件即使key一致，也需要多次append
+            data.append('fileData', file)  // append如果key不存在就创建，存在就是追加。所以一个key能携带多个文件
           })
           await axios.post('http://localhost:3000/file-operate/multi-upload', data);
         }
@@ -43,14 +43,25 @@
 
     <div style="display: flex;flex-direction: column">
       <h3>单文件分片上传</h3>
-      <div>按住command可以多选哦</div>
-      <input id="rangeFileInput" type="file" multiple/>
+      <div>本质使用slice分割Blob数据，注意：Blob的基本单位是字节（blob.size(),blob.slice(start,end)）</div>
+      <input id="sliceFileInput" type="file" multiple/>
       <script>
-        const multiFileInput = document.querySelector('#multiFileInput');
-        multiFileInput.onchange=async ()=> {
+        const sliceFileInput = document.querySelector('#sliceFileInput');
+
+        const chunkSize=1
+
+        sliceFileInput.onchange=async ()=> {
+
+          let file=sliceFileInput.files[0]
+          let chunk=[]
+          let startPos=0
+          while (startPos <= file.size()){
+            chunk.push()
+          }
+
           const data = new FormData();
           data.set('name','hedaodao'); // 这里是普通key、value
-          [...multiFileInput.files].forEach(file => {
+          [...sliceFileInput.files].forEach(file => {
             data.append('fileData', file)  // 多文件即使key一致，也需要多次append
           })
           await axios.post('http://localhost:3000/file-operate/multi-upload', data);
