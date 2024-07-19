@@ -10,6 +10,7 @@ import { AxiosInstance } from 'axios';
 import { responseSuccess } from './utils/responseUtil';
 import { ApiOperation } from '@nestjs/swagger';
 import Redis from 'ioredis';
+import { ClsService } from 'nestjs-cls';
 
 @Controller()
 export class AppController {
@@ -22,6 +23,9 @@ export class AppController {
   @Inject()
   private readonly redis: Redis;
 
+  @Inject()
+  private readonly cls: ClsService;
+
   constructor(public readonly appService: AppService) {}
 
   @ApiOperation({
@@ -30,7 +34,8 @@ export class AppController {
   })
   @NoResponseLog() // 用装饰器阻止返回值写入日志。否则，接口响应后写入日志，写入日志再次触发handleSse，造成死循环
   @Sse('real-time-log')
-  handleSse() {
+  handleSSE() {
+    const traceId = this.cls.getId();
     const today = dayjs().format('YYYY-MM-DD');
     const cmdStr = `tail -f ./${today}.log`;
     const childProcess = exec(cmdStr, { cwd: appConfig.logDir });
@@ -41,7 +46,9 @@ export class AppController {
 
       // 在Observable被取消订阅时触发
       return () => {
-        this.logger.log('客户端断开SSE连接');
+        this.logger.log('客户端断开SSE连接', 'handleSSE', {
+          traceId,
+        });
       };
     });
   }

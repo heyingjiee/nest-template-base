@@ -32,52 +32,52 @@ export class LoggerModule {
 export class CustomLogger implements LoggerService {
   private logger: Logger;
 
+  private consoleTransport = new transports.Console({
+    format: format.combine(
+      format.printf((param) => {
+        const { context, level, message, time, traceId } = param; // this.logger.xxx(msg,extra)传进来的extra参数
+        const appStr = chalk.green(`[${appConfig.applicationName}]`); // 应用名
+        const timeStr = chalk.magenta(`[${time}]`); // 时间
+        const traceIdStr = chalk.cyan(`[${traceId}]`); // traceId
+        const contextStr = chalk.yellow(`[${context}]`); // 上下文
+
+        let levelStr = '';
+        switch (level) {
+          case 'info':
+            levelStr = chalk.green(`[${level}]`);
+            break;
+          case 'warn':
+            levelStr = chalk.yellow(`[${level}]`);
+            break;
+          case 'error':
+            levelStr = chalk.red(`[${level}]`);
+            break;
+        }
+
+        return `${appStr} ${timeStr} ${traceIdStr} ${levelStr} ${contextStr} ${message}`;
+      }),
+    ),
+  });
+
+  private dailyRotateFileTransport = new transports.DailyRotateFile({
+    level: 'info',
+    format: format.combine(format.json()),
+    dirname: appConfig.logDir,
+    filename: '%DATE%.log',
+    datePattern: 'YYYY-MM-DD', // 设置文件名中的%DATE%的格式
+    maxSize: '10M', // 当个日志文件大小
+    maxFiles: '14d', // 文件保存天数
+  });
+
   @Inject()
   private readonly cls: ClsService;
 
   constructor() {
     let transportList = [];
     if (process.env.NODE_ENV === 'dev') {
-      transportList = [
-        new transports.Console({
-          format: format.combine(
-            format.printf((param) => {
-              const { time, traceId, context, level, message } = param; // this.logger.xxx(msg,extra)传进来的extra参数。traceId、level、message是默认的元数据
-              const appStr = chalk.green(`[${appConfig.applicationName}]`); // 应用名
-              const timeStr = chalk.magenta(`[${time}]`); // 时间
-              const traceIdStr = chalk.cyan(`[${traceId}]`); // traceId
-              const contextStr = chalk.yellow(`[${context}]`); // 上下文
-
-              let levelStr = '';
-              switch (level) {
-                case 'info':
-                  levelStr = chalk.green(`[${level}]`);
-                  break;
-                case 'warn':
-                  levelStr = chalk.yellow(`[${level}]`);
-                  break;
-                case 'error':
-                  levelStr = chalk.red(`[${level}]`);
-                  break;
-              }
-
-              return `${appStr} ${timeStr} ${traceIdStr} ${levelStr} ${contextStr} ${message}`;
-            }),
-          ),
-        }),
-      ];
+      transportList = [this.consoleTransport, this.dailyRotateFileTransport];
     } else {
-      transportList = [
-        new transports.DailyRotateFile({
-          level: 'info',
-          format: format.combine(format.json()),
-          dirname: appConfig.logDir,
-          filename: '%DATE%.log',
-          datePattern: 'YYYY-MM-DD', // 设置文件名中的%DATE%的格式
-          maxSize: '10M', // 当个日志文件大小
-          maxFiles: '14d', // 文件保存天数
-        }),
-      ];
+      transportList = [this.dailyRotateFileTransport];
     }
 
     this.logger = createLogger({
@@ -87,28 +87,31 @@ export class CustomLogger implements LoggerService {
     });
   }
 
-  log(message: any, ...optionalParams: any[]): any {
+  log(message: any, context: string, meta?: Record<string, any>): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('info', `${message}`, {
       traceId: this.cls.getId() ?? '-',
-      context: optionalParams[0],
+      context,
       time,
+      ...meta,
     });
   }
-  warn(message: any, ...optionalParams: any[]): any {
+  warn(message: any, context: string, meta?: Record<string, any>): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('warn', `${message}`, {
       traceId: this.cls.getId() ?? '-',
-      context: optionalParams[0],
+      context,
       time,
+      ...meta,
     });
   }
-  error(message: any, ...optionalParams: any[]): any {
+  error(message: any, context: string, meta?: Record<string, any>): any {
     const time = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS');
     this.logger.log('error', `${message}`, {
       traceId: this.cls.getId() ?? '-',
-      context: optionalParams[0],
+      context,
       time,
+      ...meta,
     });
   }
 }
