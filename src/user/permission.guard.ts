@@ -9,14 +9,18 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { isDefined } from 'class-validator';
 import { UserService } from './user.service';
+import { CustomLogger } from '../common/logger/logger.module';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   @Inject(Reflector)
   private readonly reflector: Reflector;
 
-  @Inject(UserService)
+  @Inject()
   private readonly userService: UserService;
+
+  @Inject()
+  private readonly logger: CustomLogger;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const host = context.switchToHttp();
@@ -46,6 +50,7 @@ export class PermissionGuard implements CanActivate {
     const roles = (await this.userService.findRolesByUserId(userId))?.roles;
 
     if (roles.length === 0) {
+      this.logger.log(`userId:${userId},未分配角色`, 'PermissionGuard');
       throw new UnauthorizedException('该用户暂未分配角色');
     }
 

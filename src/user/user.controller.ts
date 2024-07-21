@@ -21,14 +21,18 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequireLogin } from '../common/decorator/require-login.decorator';
 import { RequirePermission } from '../common/decorator/require-permission.decorator';
 import { User } from './entities/user.entity';
+import { ClsService } from 'nestjs-cls';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Inject(JwtService)
+  @Inject()
   private readonly jwtService: JwtService;
+
+  @Inject()
+  private readonly cls: ClsService;
 
   // @Get('init')
   // async initUserPermissionData() {

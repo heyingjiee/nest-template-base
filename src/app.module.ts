@@ -1,4 +1,4 @@
-import { Module, OnApplicationBootstrap } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,8 +17,9 @@ import { SocketModule } from './socket/socket.module';
 import { RedisModule } from './common/modules/redis.module';
 import { EmailModule } from './email/email.module';
 import { AxiosModule } from './common/modules/axios.module';
-import { ClsModule } from 'nestjs-cls';
+import { ClsMiddleware, ClsModule } from 'nestjs-cls';
 import { FileOperateModule } from './file-operate/file-operate.module';
+import { AccessLogMiddleware } from './common/middleware/access-log.middleware';
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { FileOperateModule } from './file-operate/file-operate.module';
     ClsModule.forRoot({
       global: true,
       middleware: {
-        mount: true, // 为全部路由增加中间件
+        mount: false, // true自动应用在全部路由上，false需要在consumer.apply中手动设置路由
         // setup: (cls,req) => {
         //// 每个请求有独立的作用域，同一个请求上下文共享数据。我们可以出于共享上下文的目的添加想要的数据。业务汇总注入 cls，通过this.cls.get('xxx') 取出来
         //   cls.set('userId', req.headers['x-user-id']);
@@ -75,7 +76,7 @@ import { FileOperateModule } from './file-operate/file-operate.module';
       provide: 'APP_GUARD',
       useClass: PermissionGuard,
     },
-    // 错误拦截
+    // 错误过滤器
     {
       provide: 'APP_FILTER',
       useClass: ExceptionFilter,
@@ -87,6 +88,9 @@ import { FileOperateModule } from './file-operate/file-operate.module';
     },
   ],
 })
-export class AppModule implements OnApplicationBootstrap {
-  onApplicationBootstrap(): any {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    // 链路追踪生成 traceId，一定得是第一个中间件
+    consumer.apply(ClsMiddleware, AccessLogMiddleware).forRoutes('*');
+  }
 }

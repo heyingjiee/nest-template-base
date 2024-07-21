@@ -6,8 +6,9 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { CustomLogger } from '../logger/logger.module';
+import { ClsService } from 'nestjs-cls';
 
 @Catch()
 @Injectable()
@@ -15,13 +16,18 @@ export class ExceptionFilter implements ExceptionFilter {
   @Inject()
   private readonly logger: CustomLogger;
 
+  @Inject()
+  private readonly cls: ClsService;
+
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    const request: Request = ctx.getRequest();
     const response: Response = ctx.getResponse();
 
     // 如果Error对象不小心漏到这里，是没有getStatus方法的，默认返回服务器内部错误
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let msg = '服务器内部错误';
+    const code = -1;
     this.logger.error(`${exception.stack}`, ExceptionFilter.name);
 
     // 确定抛出的是HttpException
@@ -41,15 +47,21 @@ export class ExceptionFilter implements ExceptionFilter {
           msg = exceptionRes.message[0];
         }
       } else {
-        // throw抛出的HttpException
+        // throw new HttpException('xxx'),exceptionRes是字符串xxx
         msg = exceptionRes;
       }
     }
 
-    response.status(status).json({
-      code: -1,
+    const res = {
+      code,
       data: null,
       msg,
-    });
+    };
+    this.logger.error(
+      `[${request.method}][${request.originalUrl}][${status}]${JSON.stringify(res)}`, //
+      '响应',
+    );
+
+    response.status(status).json(res);
   }
 }
