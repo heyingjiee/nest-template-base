@@ -28,6 +28,7 @@
       <div>按住command可以多选哦</div>
       <input id="multiFileInput" type="file" multiple/>
       <script>
+
         const multiFileInput = document.querySelector('#multiFileInput');
         multiFileInput.onchange=async ()=> {
           const data = new FormData();
@@ -44,44 +45,56 @@
     <div style="display: flex;flex-direction: column">
       <h3>单文件分片上传</h3>
       <div>本质使用slice分割Blob数据，注意：Blob的基本单位是字节（blob.size(),blob.slice(start,end)）</div>
-      <input id="sliceFileInput" type="file" multiple/>
+      <input id="sliceFileInput" type="file"/>
       <script>
+
         const sliceFileInput = document.querySelector('#sliceFileInput');
 
-        const chunkSize=1
+        const chunkSize=50*1024
 
         sliceFileInput.onchange=async ()=> {
 
           let file=sliceFileInput.files[0]
-          let chunk=[]
+          console.log('file',file)
+
+          let chunks=[]
           let startPos=0
-          while (startPos <= file.size()){
-            chunk.push()
+          while (startPos <= file.size){
+            chunks.push(file.slice(startPos,startPos+chunkSize))
+            startPos+=chunkSize
           }
 
-          const data = new FormData();
-          data.set('name','hedaodao'); // 这里是普通key、value
-          [...sliceFileInput.files].forEach(file => {
-            data.append('fileData', file)  // 多文件即使key一致，也需要多次append
+          chunks.forEach((chunk,index)=>{
+            const data = new FormData();
+            data.set('name',`${file.name}-${index}`);
+            data.append('fileData',chunk)
+            axios.post('/file-operate/slice-upload', data);
           })
-          await axios.post('/file-operate/multi-upload', data);
+
         }
       </script>
     </div>
 
-
-
-
-  </div>
-
-  <script>
-
-
-  </script>
-
-
-  <div>
     <h1>下载</h1>
+    <div style="display: flex;flex-direction: column">
+      <h3>下载单文件</h3>
+      <button id="singleFileDownload" style="width: fit-content">完整下载</button>
+      <button id="streamFileDownload" style="width: fit-content">流下载</button>
+      <script>
+        const singleFileDownload = document.querySelector('#singleFileDownload');
+        singleFileDownload.onclick=async ()=> {
+          await axios.get('http://localhost:3000/file-operate/single-download');
+        }
+
+
+        const streamFileDownload = document.querySelector('#streamFileDownload');
+        streamFileDownload.onclick=async ()=> {
+          await axios.get('http://localhost:3000/file-operate/stream-download');
+        }
+      </script>
+    </div>
   </div>
+
+
 </body>
 </html>

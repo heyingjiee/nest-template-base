@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { FileOperateService } from './file-operate.service';
-import { FileOperateController } from './file-operate.controller';
+import { UploadController } from './upload.controller';
+import { DownloadController } from './download.controller';
 
 @Module({
-  controllers: [FileOperateController],
+  controllers: [UploadController, DownloadController],
   providers: [FileOperateService],
 })
 export class FileOperateModule {}

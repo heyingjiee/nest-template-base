@@ -6,7 +6,7 @@ import { CustomLogger } from '../logger/logger.module';
 export class AccessLogMiddleware implements NestMiddleware {
   @Inject()
   private readonly logger: CustomLogger;
-  use(req: Request, res: Response, next: () => void) {
+  async use(req: Request, res: Response, next: () => void) {
     const { method, originalUrl } = req;
 
     this.logger.log(`[${method}][${originalUrl}]`, '请求');

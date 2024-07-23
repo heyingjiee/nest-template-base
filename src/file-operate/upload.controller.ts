@@ -18,7 +18,7 @@ import { customFileTypeValidator } from './file.validator';
 import { storage } from './file-interceptor.storage';
 
 @Controller('file-operate')
-export class FileOperateController {
+export class UploadController {
   @Inject()
   private readonly logger: CustomLogger;
   constructor(private readonly fileOperateService: FileOperateService) {}
@@ -28,7 +28,7 @@ export class FileOperateController {
   @UseInterceptors(
     FileInterceptor('fileData', {
       // 使用内置拦截器FileInterceptor（需配合multer包使用）。fileData是上传文件的key，dest是上传文件放置的路径
-      // dest: 'uploads', // 相对项目根路径
+      // dest: 'uploads', // 相对项目根路径。直接使用dest上传的文件没有后缀名，所以一般使用storage
       storage, // 使用multer.diskStorage({}) 创建 StorageEngine。diskStorage中可自定义文件路径、文件名
     }),
   )
@@ -85,6 +85,19 @@ export class FileOperateController {
     @UploadedFiles() fileData: Array<Express.Multer.File>,
     @Body() body,
   ) {
+    console.log('fileData', fileData);
+    console.log('body', body);
+    return responseSuccess(null);
+  }
+
+  @ApiOperation({ summary: '文件切片上传' })
+  @Post('slice-upload')
+  @UseInterceptors(
+    FileInterceptor('fileData', {
+      storage,
+    }),
+  )
+  sliceUploadFile(@UploadedFile() fileData: Express.Multer.File, @Body() body) {
     console.log('fileData', fileData);
     console.log('body', body);
     return responseSuccess(null);
