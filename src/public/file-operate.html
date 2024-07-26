@@ -76,20 +76,57 @@
     </div>
 
     <h1>下载</h1>
+    <div>直接使用浏览器访问请求地址，浏览器就会弹出下载保存窗口。在代码中通过 window.open('xxxx')也是同样的效果。 但是如果想要在不离开页面的情况下，下载就需要使用blob了</div>
     <div style="display: flex;flex-direction: column">
       <h3>下载单文件</h3>
-      <button id="singleFileDownload" style="width: fit-content">完整下载</button>
-      <button id="streamFileDownload" style="width: fit-content">流下载</button>
+      <div style="display: flex">
+        <button id="singleFileDownload" style="width: fit-content;margin-right: 20px">完整下载</button>
+        <button id="streamFileDownload" style="width: fit-content">流下载</button>
+      </div>
+      <h3>多文件压缩</h3>
+      <div style="display: flex">
+        <button id="compressFileDownload" style="width: fit-content">压缩包下载</button>
+      </div>
       <script>
         const singleFileDownload = document.querySelector('#singleFileDownload');
         singleFileDownload.onclick=async ()=> {
-          await axios.get('http://localhost:3000/file-operate/single-download');
+          const res=await axios.get('/file-operate/single-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'image/jpeg',filename)
         }
 
 
         const streamFileDownload = document.querySelector('#streamFileDownload');
         streamFileDownload.onclick=async ()=> {
-          await axios.get('http://localhost:3000/file-operate/stream-download');
+          const res=await axios.get('/file-operate/stream-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'image/jpeg',filename)
+        }
+
+
+        const compressFileDownload = document.querySelector('#compressFileDownload');
+        compressFileDownload.onclick=async ()=> {
+          const res=await axios.get('/file-operate/compress-stream-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'application/zip',filename)
+        }
+
+        function download(data,type,filename){
+          const blob=  new Blob([data],{type})
+          const url =  URL.createObjectURL(blob)
+
+          const downloadEle= document.createElement('a')
+          downloadEle.href=url
+          downloadEle.style.display='none'
+          downloadEle.download=filename
+          document.body.appendChild(downloadEle)
+          downloadEle.click()
+          document.body.removeChild(downloadEle)
+          URL.revokeObjectURL(url)
+
         }
       </script>
     </div>

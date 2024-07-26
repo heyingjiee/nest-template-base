@@ -4,14 +4,10 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { LoginGuard } from './user/login.guard';
-import { PermissionGuard } from './user/permission.guard';
 import { LoggerModule } from './common/logger/logger.module';
 import appConfig from './common/configs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SchedulerModule } from './scheduler/scheduler.module';
-import { ExceptionFilter } from './common/filters/exception.filter';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SocketModule } from './socket/socket.module';
 import { RedisModule } from './common/modules/redis.module';
@@ -20,6 +16,10 @@ import { AxiosModule } from './common/modules/axios.module';
 import { ClsMiddleware, ClsModule } from 'nestjs-cls';
 import { FileOperateModule } from './file-operate/file-operate.module';
 import { AccessLogMiddleware } from './common/middleware/access-log.middleware';
+import { ExceptionFilter } from './common/filters/exception.filter';
+import { PermissionGuard } from './user/permission.guard';
+import { LoginGuard } from './user/login.guard';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
