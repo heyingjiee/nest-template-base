@@ -3,11 +3,14 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { CustomLogger } from './common/logger/logger.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true, // 所有的日志都会被放入缓冲区直到一个自定义的日志记录器被接入
   });
+
+  app.use(helmet()); // helmet 中间件
 
   app.useLogger(app.get(CustomLogger)); // 接入日志记录器
 

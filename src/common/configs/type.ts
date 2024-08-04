@@ -10,6 +10,8 @@ export interface GlobalEnvConfigType {
   sourceDir: string;
   // 日志路径
   logDir: string;
+  // 上传文件目录
+  uploadDir: string;
   // 静态资源路径
   staticAssetDir: string;
   // 项目名
