@@ -68,6 +68,9 @@ dependencies:
   compressing:
     specifier: ^1.10.1
     version: 1.10.1
+  cross-env:
+    specifier: ^7.0.3
+    version: 7.0.3
   dayjs:
     specifier: ^1.11.11
     version: 1.11.11
@@ -4488,6 +4491,14 @@ packages:
     dependencies:
       '@types/luxon': 3.4.2
       luxon: 3.4.4
+    dev: false
+
+  /cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: false
 
   /cross-spawn@7.0.3:
