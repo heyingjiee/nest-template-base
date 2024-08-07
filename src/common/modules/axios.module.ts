@@ -12,7 +12,7 @@ interface AxiosModuleOption {
 export class AxiosModule {
   static forRoot(options: AxiosModuleOption): DynamicModule {
     const axiosProvider: Provider = {
-      provide: 'axios',
+      provide: 'Axios',
       inject: [HttpService, CustomLogger],
       useFactory: (httpService: HttpService, logger: CustomLogger) => {
         // 请求拦截器

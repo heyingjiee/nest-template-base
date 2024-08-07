@@ -34,12 +34,13 @@ export class ResponseInterceptor<T> implements NestInterceptor {
 
     const { method, path } = request;
 
-    this.logger.log(`[${method}][${path}]`, '请求');
+    // this.logger.log(`[${method}][${path}]`, '请求');
+
     return next.handle().pipe(
-      tap((res) => {
+      tap((data) => {
         if (!noResponseLog) {
           this.logger.log(
-            `[${method}][${path}][${response.statusCode}]${JSON.stringify(res)}`,
+            `[${method}][${path}][${response.statusCode}]${JSON.stringify(data)}`,
             '响应',
           );
         }

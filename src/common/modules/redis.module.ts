@@ -12,7 +12,7 @@ export class RedisModule {
   static forRoot(options: RedisModuleOption): DynamicModule {
     const redis = new Redis(options.redisConfig);
     const redisProvider: Provider = {
-      provide: 'REDIS',
+      provide: Redis,
       useFactory() {
         return redis;
       },

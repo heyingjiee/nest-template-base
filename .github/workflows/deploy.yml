@@ -20,9 +20,6 @@ jobs:
       - name: Build
         run: |
          pnpm build
-         cp -r package.json ./dist
-         cp -r Dockerfile ./dist
-         cp -r ecosystem.config.cjs ./dist
 
       - name: Deploy Dist
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest

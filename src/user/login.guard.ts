@@ -29,6 +29,7 @@ export class LoginGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const host = context.switchToHttp();
+
     const request: Request = host.getRequest();
 
     // getAllAndOverride 表示出现重复的元数据，后面的覆盖前面的

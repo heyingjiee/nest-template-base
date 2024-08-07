@@ -18,7 +18,7 @@ export class SchedulerController {
   // // 毫秒值
   // @Interval('task2', 5000)
   // handleInterval() {
-  //   this.logger.log('定时任务2', '定时任务');
+  //   this.logger.log('定时任务2','定时任务');
   // }
   //
   // @Timeout('task3', 2000)
