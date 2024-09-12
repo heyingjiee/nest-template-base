@@ -15,7 +15,7 @@ interface Data<T> {
 }
 
 @Injectable()
-export class ResponseInterceptor<T> implements NestInterceptor {
+export class GlobalResponseInterceptor<T> implements NestInterceptor {
   @Inject()
   private readonly logger: CustomLogger;
 
@@ -32,7 +32,8 @@ export class ResponseInterceptor<T> implements NestInterceptor {
       context.getHandler(), // 获取handler的元数据
     ]) as boolean | undefined;
 
-    const { method, path } = request;
+    const { method, originalUrl } = request;
+    const { statusCode } = response;
 
     // this.logger.log(`[${method}][${path}]`, '请求');
 
@@ -40,7 +41,7 @@ export class ResponseInterceptor<T> implements NestInterceptor {
       tap((data) => {
         if (!noResponseLog) {
           this.logger.log(
-            `[${method}][${path}][${response.statusCode}]${JSON.stringify(data)}`,
+            `[${method}][${originalUrl}][${statusCode}]${JSON.stringify(data)}`,
             '响应',
           );
         }

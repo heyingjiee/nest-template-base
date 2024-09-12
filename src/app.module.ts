@@ -16,10 +16,11 @@ import { AxiosModule } from './common/modules/axios.module';
 import { ClsMiddleware, ClsModule } from 'nestjs-cls';
 import { FileOperateModule } from './file-operate/file-operate.module';
 import { AccessLogMiddleware } from './common/middleware/access-log.middleware';
-import { ExceptionFilter } from './common/filters/exception.filter';
-import { PermissionGuard } from './user/permission.guard';
-import { LoginGuard } from './user/login.guard';
-import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { GlobalExceptionFilter } from './common/filter/global-exception.filter';
+import { GlobalResponseInterceptor } from './common/interceptor/global-response.interceptor';
+import { AuthModule } from './auth/auth.module';
+import { JwtVerifyGuard } from './auth/guard/jwt-verify.guard';
+import { RolePermissionGuard } from './auth/guard/role-permission.guard';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     }),
     JwtModule.register({
       global: true, // 设置为全局模块，使用无需import，全局都可以注入
-      secret: 'hedaodao', // 秘钥
+      secret: appConfig.JWTConfig.secret, // 秘钥
     }),
     AxiosModule.forRoot({
       global: true,
@@ -63,28 +64,30 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     SocketModule,
     EmailModule,
     FileOperateModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    // 路由守卫
+    // 全局JWT校验路由守卫，默认全部开启，使用@isPublic可跳过该守卫
     {
       provide: 'APP_GUARD',
-      useClass: LoginGuard,
+      useClass: JwtVerifyGuard,
     },
+    // 全局角色权限守卫，只对@RequirePermission()开启
     {
       provide: 'APP_GUARD',
-      useClass: PermissionGuard,
+      useClass: RolePermissionGuard,
     },
     // 错误过滤器
     {
       provide: 'APP_FILTER',
-      useClass: ExceptionFilter,
+      useClass: GlobalExceptionFilter,
     },
     // 拦截器
     {
       provide: 'APP_INTERCEPTOR',
-      useClass: ResponseInterceptor,
+      useClass: GlobalResponseInterceptor,
     },
   ],
 })

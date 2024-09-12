@@ -4,13 +4,14 @@ export interface responseType<T = any> {
   msg: string;
 }
 
-export function responseError(
+export function responseError<T = any>(
+  data: T,
   err: Error,
   code: number = -1,
-): responseType<null> {
+): responseType<T> {
   return {
     code,
-    data: null,
+    data,
     msg: err.message,
   };
 }

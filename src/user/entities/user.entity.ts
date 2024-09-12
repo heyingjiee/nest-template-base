@@ -26,11 +26,20 @@ export class User {
 
   @Column({
     length: 50,
-    comment: '密码',
+    nullable: true,
+    comment: '密码', // Github授权登陆创建的用户密码就是空的
   })
   @ApiHideProperty()
   @Exclude()
   password: string;
+
+  @Column({
+    length: 50,
+    nullable: true,
+    comment: 'githubId',
+  })
+  @ApiProperty()
+  githubId: string;
 
   @CreateDateColumn({
     comment: '创建时间',

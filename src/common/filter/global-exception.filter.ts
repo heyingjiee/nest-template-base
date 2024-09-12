@@ -1,6 +1,7 @@
 import {
   ArgumentsHost,
   Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
   Inject,
@@ -8,16 +9,12 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CustomLogger } from '../logger/logger.module';
-import { ClsService } from 'nestjs-cls';
 
 @Catch()
 @Injectable()
-export class ExceptionFilter implements ExceptionFilter {
+export class GlobalExceptionFilter implements ExceptionFilter {
   @Inject()
   private readonly logger: CustomLogger;
-
-  @Inject()
-  private readonly cls: ClsService;
 
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -28,7 +25,7 @@ export class ExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let msg = '服务器内部错误';
     const code = -1;
-    this.logger.error(`${exception.stack}`, ExceptionFilter.name);
+    this.logger.error(`${exception.stack}`, GlobalExceptionFilter.name);
 
     // 确定抛出的是HttpException
     if (exception instanceof HttpException) {

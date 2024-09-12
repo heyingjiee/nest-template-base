@@ -5,14 +5,14 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { isDefined } from 'class-validator';
-import { UserService } from './user.service';
-import { CustomLogger } from '../common/logger/logger.module';
+import { UserService } from '../../user/user.service';
+import { CustomLogger } from '../../common/logger/logger.module';
+import { AuthedRequest } from '../types/auth-request.type';
+import { Request } from 'express';
 
 @Injectable()
-export class PermissionGuard implements CanActivate {
+export class RolePermissionGuard implements CanActivate {
   @Inject(Reflector)
   private readonly reflector: Reflector;
 
@@ -25,7 +25,7 @@ export class PermissionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const host = context.switchToHttp();
 
-    const request: Request = host.getRequest();
+    const request: AuthedRequest | Request = host.getRequest();
 
     const requirePermission = this.reflector.getAllAndOverride(
       'require-permission',
@@ -39,14 +39,14 @@ export class PermissionGuard implements CanActivate {
 
     // 设置权限
     // 获取当其用户权限
-    if (!isDefined(request.userId)) {
+    if (!('userId' in request.user)) {
       // 登录守卫会设置用户信息
       throw new UnauthorizedException(
         '设置权限需用户登陆，handler需增加@RequireLogin()',
       );
     }
 
-    const userId = request.userId;
+    const userId = request.user.userId;
     const roles = (await this.userService.findRolesByUserId(userId))?.roles;
 
     if (roles.length === 0) {

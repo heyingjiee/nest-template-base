@@ -7,9 +7,12 @@ export class AccessLogMiddleware implements NestMiddleware {
   @Inject()
   private readonly logger: CustomLogger;
   async use(req: Request, res: Response, next: () => void) {
-    const { method, originalUrl } = req;
+    const { ip, method, originalUrl, headers, body } = req;
 
-    this.logger.log(`[${method}][${originalUrl}]`, '请求');
+    this.logger.log(
+      `[${method}][${originalUrl}][ip:<${ip}>][header:${JSON.stringify(headers)}][body:${JSON.stringify(body)}]`,
+      '请求',
+    );
     next();
   }
 }

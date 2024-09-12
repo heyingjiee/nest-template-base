@@ -5,9 +5,10 @@ import { Response } from 'express';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { zip } from 'compressing';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller('file-operate')
+@ApiTags('file-download')
+@Controller('file-download')
 export class DownloadController {
   @Inject()
   private readonly logger: CustomLogger;
