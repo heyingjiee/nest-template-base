@@ -1,82 +1,44 @@
 import {
-  Body,
   Controller,
   Get,
   Inject,
-  Post,
   Req,
+  UseFilters,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { responseSuccess } from '../utils/responseUtil';
+import { responseSuccess } from '../../utils/responseUtil';
 import { JwtService } from '@nestjs/jwt';
-import appConfig from '../common/configs/config';
-import { IsPublic } from './decorator/is-public.decorator';
+import appConfig from '../../common/configs/config';
+import { IsPublic } from '../decorator/is-public.decorator';
 import {
   AuthedRequest,
   GithubUserPassport,
   UserPassport,
-} from './types/auth-request.type';
-import {
-  GithubRegisterUserDto,
-  LocalRegisterUserDto,
-} from './dto/register-user.dto';
-import { LocalLoginUserDto } from './dto/login-user.dto';
-import { LocalAuthService } from './service/local-auth.service';
-import { GithubAuthService } from './service/github-auth.service';
+} from '../types/auth-request.type';
+import { GithubRegisterUserDto } from './dto/register-user.dto';
+import { GithubAuthService } from './github-auth.service';
+import { GithubAuthExceptionFilter } from './github-auth-exception.filter';
 
-@ApiTags('auth')
+@ApiTags('auth/github')
 @IsPublic()
-@Controller('auth')
-export class AuthController {
+@Controller('auth/github')
+export class GithubAuthController {
   @Inject()
   private readonly jwtService: JwtService;
 
   @Inject()
-  private readonly localAuthService: LocalAuthService;
-
-  @Inject()
   private readonly githubAuthService: GithubAuthService;
   constructor() {}
-
-  @ApiOperation({ summary: '账号密码登录' })
-  @ApiBody({ type: LocalLoginUserDto })
-  @UseGuards(AuthGuard('local'))
-  @Post('local-login')
-  async loginByLocal(@Req() req: AuthedRequest) {
-    const { userId, username } = req.user;
-    const token = await this.jwtService.signAsync(
-      {
-        userId,
-        username,
-      },
-      { expiresIn: appConfig.JWTConfig.expire },
-    );
-
-    return responseSuccess({
-      token,
-    });
-  }
-
-  @ApiOperation({ summary: '注册接口', description: '用于用户注册' })
-  @ApiBody({ type: LocalRegisterUserDto })
-  @IsPublic()
-  @Post('local-register')
-  async register(
-    @Body(ValidationPipe) localRegisterUserDto: LocalRegisterUserDto,
-  ) {
-    await this.localAuthService.register(localRegisterUserDto);
-    return responseSuccess(null, '注册成功');
-  }
 
   @ApiOperation({
     summary: '请求Github授权',
     description: '页面重定向到Github授权页面',
   })
   @UseGuards(AuthGuard('github'))
-  @Get('fetch-github-auth')
+  @UseFilters(GithubAuthExceptionFilter)
+  @Get('fetch-auth')
   async fetchGithubAuth() {}
 
   @ApiOperation({
@@ -89,7 +51,8 @@ export class AuthController {
     type: String,
   })
   @UseGuards(AuthGuard('github'))
-  @Get('github-login')
+  @UseFilters(GithubAuthExceptionFilter)
+  @Get('login')
   async loginByGithub(
     @Req() req: AuthedRequest<GithubUserPassport | UserPassport>,
   ) {

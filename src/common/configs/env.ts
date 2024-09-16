@@ -1,6 +1,6 @@
-import { User } from '../../user/entities/user.entity';
-import { Role } from '../../user/entities/role.entity';
-import { Permission } from '../../user/entities/permission.entity';
+import { User } from '@/user/entities/user.entity';
+import { Role } from '@/auth/role-auth/entities/role.entity';
+import { Permission } from '@/auth/role-auth/entities/permission.entity';
 
 export default {
   dev: {

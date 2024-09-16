@@ -1,19 +1,15 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
 import { User } from '../../user/entities/user.entity';
-import { CustomLogger } from '../../common/logger/logger.module';
-import { LocalRegisterUserDto } from '../dto/register-user.dto';
-import { LocalLoginUserDto } from '../dto/login-user.dto';
+import { LocalRegisterUserDto } from './dto/register-user.dto';
+import { LocalLoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class LocalAuthService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
-
-  @Inject()
-  private readonly logger: CustomLogger;
 
   async login(localLoginUserDto: LocalLoginUserDto) {
     const user = await this.userRepository.findOne({

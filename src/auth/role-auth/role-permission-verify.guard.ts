@@ -6,18 +6,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserService } from '../../user/user.service';
-import { CustomLogger } from '../../common/logger/logger.module';
+import { CustomLogger } from '@/common/logger/logger.module';
 import { AuthedRequest } from '../types/auth-request.type';
 import { Request } from 'express';
+import { RoleAuthService } from './role-auth.service';
 
 @Injectable()
-export class RolePermissionGuard implements CanActivate {
-  @Inject(Reflector)
+export class RolePermissionVerifyGuard implements CanActivate {
+  @Inject()
   private readonly reflector: Reflector;
 
   @Inject()
-  private readonly userService: UserService;
+  private readonly roleAuthService: RoleAuthService;
 
   @Inject()
   private readonly logger: CustomLogger;
@@ -47,7 +47,7 @@ export class RolePermissionGuard implements CanActivate {
     }
 
     const userId = request.user.userId;
-    const roles = (await this.userService.findRolesByUserId(userId))?.roles;
+    const roles = (await this.roleAuthService.findRolesByUserId(userId))?.roles;
 
     if (roles.length === 0) {
       this.logger.log(`userId:${userId},未分配角色`, 'PermissionGuard');
@@ -55,7 +55,7 @@ export class RolePermissionGuard implements CanActivate {
     }
 
     const rolesJoinPermissions =
-      await this.userService.findPermissionsByRoleIds(
+      await this.roleAuthService.findPermissionsByRoleIds(
         roles.map((item) => item.id),
       );
 

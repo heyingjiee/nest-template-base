@@ -14,7 +14,7 @@ import { CustomLogger } from '../logger/logger.module';
 @Injectable()
 export class GlobalExceptionFilter implements ExceptionFilter {
   @Inject()
-  private readonly logger: CustomLogger;
+  readonly logger: CustomLogger;
 
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -25,7 +25,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let msg = '服务器内部错误';
     const code = -1;
-    this.logger.error(`${exception.stack}`, GlobalExceptionFilter.name);
+    // if ('cause' in exception) {
+    //   // cause可以显示携带的子异常信息
+    //   this.logger.error(
+    //     `${JSON.stringify(exception.cause)} ${(exception.cause as Error).stack}`,
+    //     GlobalExceptionFilter.name,
+    //   );
+    // }
+    this.logger.error(
+      `name:${exception.name}\n message:${exception.message}\n stack:${exception.stack}`,
+      GlobalExceptionFilter.name,
+    );
 
     // 确定抛出的是HttpException
     if (exception instanceof HttpException) {

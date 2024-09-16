@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { CustomLogger } from '../../common/logger/logger.module';
 
 @Injectable()
 export class JwtVerifyGuard extends AuthGuard('jwt') {
@@ -12,9 +11,6 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
 
   @Inject()
   private readonly reflector: Reflector;
-
-  @Inject()
-  private readonly logger: CustomLogger;
 
   canActivate(
     context: ExecutionContext,

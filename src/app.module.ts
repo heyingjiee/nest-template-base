@@ -19,8 +19,9 @@ import { AccessLogMiddleware } from './common/middleware/access-log.middleware';
 import { GlobalExceptionFilter } from './common/filter/global-exception.filter';
 import { GlobalResponseInterceptor } from './common/interceptor/global-response.interceptor';
 import { AuthModule } from './auth/auth.module';
-import { JwtVerifyGuard } from './auth/guard/jwt-verify.guard';
-import { RolePermissionGuard } from './auth/guard/role-permission.guard';
+import { JwtVerifyGuard } from './auth/jwt-auth/jwt-verify.guard';
+import { JwtAuthExceptionFilter } from './auth/jwt-auth/jwt-auth-exception.filter';
+import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-verify.guard';
 
 @Module({
   imports: [
@@ -77,9 +78,13 @@ import { RolePermissionGuard } from './auth/guard/role-permission.guard';
     // 全局角色权限守卫，只对@RequirePermission()开启
     {
       provide: 'APP_GUARD',
-      useClass: RolePermissionGuard,
+      useClass: RolePermissionVerifyGuard,
     },
     // 错误过滤器
+    {
+      provide: 'APP_FILTER',
+      useClass: JwtAuthExceptionFilter,
+    },
     {
       provide: 'APP_FILTER',
       useClass: GlobalExceptionFilter,
