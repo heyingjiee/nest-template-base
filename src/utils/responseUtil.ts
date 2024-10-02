@@ -1,28 +1,12 @@
-export interface responseType<T = any> {
-  code: number;
-  data: T;
-  msg: string;
-}
-
-export function responseError<T = any>(
-  data: T,
-  err: Error,
-  code: number = -1,
-): responseType<T> {
-  return {
-    code,
-    data,
-    msg: err.message,
-  };
-}
+import { ResponseType } from '@/common/type/response.interface';
 
 export function responseSuccess<T = any>(
   data: T,
-  msg: string = 'ok',
-): responseType<T> {
+  message: string = 'ok',
+): ResponseType<T> {
   return {
-    code: 0,
+    code: '000000',
     data,
-    msg,
+    message,
   };
 }

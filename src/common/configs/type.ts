@@ -22,6 +22,8 @@ export interface GlobalConfigType extends GlobalEnvConfigType {
 }
 
 export interface GlobalEnvConfigType {
+  // 启动端口
+  port: number;
   // redis配置
   redisConfig: RedisOptions;
   // 数据库配置

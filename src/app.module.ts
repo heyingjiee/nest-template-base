@@ -20,7 +20,6 @@ import { GlobalExceptionFilter } from './common/filter/global-exception.filter';
 import { GlobalResponseInterceptor } from './common/interceptor/global-response.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { JwtVerifyGuard } from './auth/jwt-auth/jwt-verify.guard';
-import { JwtAuthExceptionFilter } from './auth/jwt-auth/jwt-auth-exception.filter';
 import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-verify.guard';
 
 @Module({
@@ -81,10 +80,6 @@ import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-veri
       useClass: RolePermissionVerifyGuard,
     },
     // 错误过滤器
-    {
-      provide: 'APP_FILTER',
-      useClass: JwtAuthExceptionFilter,
-    },
     {
       provide: 'APP_FILTER',
       useClass: GlobalExceptionFilter,

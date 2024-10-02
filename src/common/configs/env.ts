@@ -4,6 +4,7 @@ import { Permission } from '@/auth/role-auth/entities/permission.entity';
 
 export default {
   dev: {
+    port: 3000,
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',
@@ -27,6 +28,7 @@ export default {
     },
   },
   qa: {
+    port: 3000,
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',
@@ -51,6 +53,7 @@ export default {
     },
   },
   prod: {
+    port: 3000,
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',

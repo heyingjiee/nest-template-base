@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
       jwtFromRequest: fromAuthHeaderAsBearerToken(), // 请求头 Authorization:Bearer xxxx
-      ignoreExpiration: true,
+      ignoreExpiration: false,
       secretOrKey: appConfig.JWTConfig.secret,
     });
   }

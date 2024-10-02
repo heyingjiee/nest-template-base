@@ -8,16 +8,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Permission } from './permission.entity';
-import { Exclude } from 'class-transformer';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Role {
   @PrimaryGeneratedColumn({
     comment: '角色id',
   })
-  @ApiHideProperty()
-  @Exclude()
+  @ApiProperty()
   id: number;
 
   @Column({ comment: '角色名' })
@@ -38,5 +36,6 @@ export class Role {
 
   @ManyToMany(() => Permission)
   @JoinTable({ name: 'role_permission_relation' })
+  @ApiProperty({ type: () => Permission })
   permissions: Permission[];
 }

@@ -3,6 +3,11 @@ import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, In } from 'typeorm';
 import { User } from '@/user/entities/user.entity';
 import { Role } from './entities/role.entity';
+import { CreateRoleDto } from '@/auth/role-auth/dto/role.dto';
+import {
+  RoleExistException,
+  RoleNoneExistException,
+} from '@/common/exception/auth.exception';
 
 @Injectable()
 export class RoleAuthService {
@@ -41,5 +46,60 @@ export class RoleAuthService {
         permissions: true,
       },
     });
+  }
+
+  // 创建角色
+  async createRole(createRoleDto: CreateRoleDto): Promise<boolean> {
+    const { name } = createRoleDto;
+    const findRoleRes = await this.entityManager.findOneBy(Role, {
+      name,
+    });
+
+    if (findRoleRes !== null) {
+      throw new RoleExistException();
+    }
+
+    await this.entityManager.insert(Role, {
+      name,
+    });
+
+    return true;
+  }
+
+  // 删除角色
+  async deleteRoleById(roleId: number) {
+    const isExist = await this.entityManager.exists(Role, {
+      where: {
+        id: roleId,
+      },
+    });
+
+    if (!isExist) {
+      throw new RoleNoneExistException();
+    }
+
+    const { affected } = await this.entityManager.delete(Role, {
+      id: roleId,
+    });
+
+    return affected > 0;
+  }
+
+  // 全部角色
+  async findAllRole() {
+    return this.entityManager.find(Role);
+  }
+  // 查询角色拥有的权限
+  async findPermissionByRoleId(roleId: number) {
+    const res = await this.entityManager.find(Role, {
+      where: {
+        id: roleId,
+      },
+      relations: {
+        permissions: true,
+      },
+    });
+
+    return res;
   }
 }

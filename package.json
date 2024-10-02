@@ -5,7 +5,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
-    "start:qa": "cross-env NODE_ENV=dev ./scripts/start.sh",
+    "start:qa": "cross-env NODE_ENV=qa ./scripts/start.sh",
     "start:prod": "cross-env NODE_ENV=prod ./scripts/start.sh",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "typeorm-cli": "typeorm-ts-node-esm -d src/common/configs/orm-cli.config.ts",

@@ -9,11 +9,19 @@ import { GithubAuthService } from './github-auth/github-auth.service';
 import { LocalAuthController } from './local-auth/local-auth.controller';
 import { GithubAuthController } from './github-auth/github-auth.controller';
 import { RoleAuthService } from './role-auth/role-auth.service';
-import { RoleAuthController } from './role-auth/role-auth.controller';
+import {
+  RoleController,
+  PermissionController,
+} from './role-auth/controller/index';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  controllers: [LocalAuthController, GithubAuthController, RoleAuthController],
+  controllers: [
+    LocalAuthController,
+    GithubAuthController,
+    RoleController,
+    PermissionController,
+  ],
   providers: [
     // Service
     LocalAuthService,

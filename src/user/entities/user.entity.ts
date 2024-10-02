@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../auth/role-auth/entities/role.entity';
 import { Exclude } from 'class-transformer';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -29,7 +29,6 @@ export class User {
     nullable: true,
     comment: '密码', // Github授权登陆创建的用户密码就是空的
   })
-  @ApiHideProperty()
   @Exclude()
   password: string;
 

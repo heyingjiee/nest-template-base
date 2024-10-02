@@ -1,13 +1,5 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Req,
-  UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Inject, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { responseSuccess } from '../../utils/responseUtil';
 import { JwtService } from '@nestjs/jwt';
 import appConfig from '../../common/configs/config';
@@ -19,7 +11,7 @@ import {
 } from '../types/auth-request.type';
 import { GithubRegisterUserDto } from './dto/register-user.dto';
 import { GithubAuthService } from './github-auth.service';
-import { GithubAuthExceptionFilter } from './github-auth-exception.filter';
+import { GithubVerifyGuard } from '@/auth/github-auth/github-verify.guard';
 
 @ApiTags('auth/github')
 @IsPublic()
@@ -36,8 +28,7 @@ export class GithubAuthController {
     summary: '请求Github授权',
     description: '页面重定向到Github授权页面',
   })
-  @UseGuards(AuthGuard('github'))
-  @UseFilters(GithubAuthExceptionFilter)
+  @UseGuards(GithubVerifyGuard)
   @Get('fetch-auth')
   async fetchGithubAuth() {}
 
@@ -50,8 +41,7 @@ export class GithubAuthController {
     name: 'code',
     type: String,
   })
-  @UseGuards(AuthGuard('github'))
-  @UseFilters(GithubAuthExceptionFilter)
+  @UseGuards(GithubVerifyGuard)
   @Get('login')
   async loginByGithub(
     @Req() req: AuthedRequest<GithubUserPassport | UserPassport>,

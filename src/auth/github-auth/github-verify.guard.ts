@@ -7,7 +7,7 @@ import { UnauthorizedAuthException } from '@/common/exception/auth.exception';
 import { CustomLogger } from '@/common/logger/logger.module';
 
 @Injectable()
-export class JwtVerifyGuard extends AuthGuard('jwt') {
+export class GithubVerifyGuard extends AuthGuard('github') {
   @Inject()
   jwtService: JwtService;
 
@@ -21,18 +21,6 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    // getAllAndOverride 表示出现重复的元数据，后面的覆盖前面的
-    const isPublic = this.reflector.getAllAndOverride('is-public', [
-      context.getClass(), // 获取class的元数据
-      context.getHandler(), // 获取handler的元数据
-    ]) as boolean | undefined;
-
-    // 无需登录接口，直接放行
-    if (isPublic) {
-      return true;
-    }
-
-    // 需要登陆，则调用AuthGuard('jwt')
     return super.canActivate(context);
   }
 
@@ -41,7 +29,7 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
     // 参数：err 错误对象（没有就是 null）, user 用户信息（没有就是 null）, info 验证信息（失败就是自定义的 Error）, context: ExecutionContext
     this.Logger.log(
       `err:${err} | user:${user} | info:${JSON.stringify(info)}`,
-      JwtVerifyGuard.name,
+      GithubVerifyGuard.name,
     );
     // 自定义错误处理逻辑
     if (err || !user) {

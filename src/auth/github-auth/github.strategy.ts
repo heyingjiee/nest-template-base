@@ -1,9 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-github2';
 import { CustomLogger } from '../../common/logger/logger.module';
 import { GithubUserPassport, UserPassport } from '../types/auth-request.type';
 import { RoleAuthService } from '@/auth/role-auth/role-auth.service';
+import { UnauthorizedAuthException } from '@/common/exception/auth.exception';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
@@ -41,6 +42,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       }
     }
 
-    throw new UnauthorizedException('githubId获取失败');
+    throw new UnauthorizedAuthException({ message: 'githubId获取失败' });
   }
 }

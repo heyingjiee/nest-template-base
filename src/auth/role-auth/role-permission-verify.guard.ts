@@ -3,13 +3,13 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { CustomLogger } from '@/common/logger/logger.module';
 import { AuthedRequest } from '../types/auth-request.type';
 import { Request } from 'express';
 import { RoleAuthService } from './role-auth.service';
+import { UnauthorizedAuthException } from '@/common/exception/auth.exception';
 
 @Injectable()
 export class RolePermissionVerifyGuard implements CanActivate {
@@ -41,9 +41,9 @@ export class RolePermissionVerifyGuard implements CanActivate {
     // 获取当其用户权限
     if (!('userId' in request.user)) {
       // 登录守卫会设置用户信息
-      throw new UnauthorizedException(
-        '设置权限需用户登陆，handler需增加@RequireLogin()',
-      );
+      throw new UnauthorizedAuthException({
+        message: '设置权限需用户登陆，handler需增加@RequireLogin()',
+      });
     }
 
     const userId = request.user.userId;
@@ -51,7 +51,7 @@ export class RolePermissionVerifyGuard implements CanActivate {
 
     if (roles.length === 0) {
       this.logger.log(`userId:${userId},未分配角色`, 'PermissionGuard');
-      throw new UnauthorizedException('该用户暂未分配角色');
+      throw new UnauthorizedAuthException({ message: '该用户暂未分配角色' });
     }
 
     const rolesJoinPermissions =
