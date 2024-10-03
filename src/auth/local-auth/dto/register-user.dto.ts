@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class RegisterUserDto {
+export class LocalRegisterUserDto {
   @ApiProperty()
   @IsString({ message: 'username类型校验失败' })
   @Length(6, 30, { message: 'username长度在6-30之间' })

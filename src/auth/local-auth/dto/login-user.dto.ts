@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginUserDto {
+export class LocalLoginUserDto {
   @ApiProperty()
   @IsString({ message: 'username类型校验失败' })
   @IsNotEmpty({ message: 'username不能为空' })

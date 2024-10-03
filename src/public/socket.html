@@ -10,7 +10,7 @@
   <button id="close-btn">断开socket连接</button>
 </body>
 <script>
-  const socket = io('http://localhost:3000');
+  const socket = io('/');
 
   // 建立连接事件
   socket.on('connect', function() {

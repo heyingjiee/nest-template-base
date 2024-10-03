@@ -5,10 +5,18 @@
 [![Deploy](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml/badge.svg)](https://github.com/heyingjiee/nest-template-base/actions/workflows/deploy.yml)
 
 ## 待办
-- [ ] 文件处理Demo（）
-- [ ] 集成爬虫模块
-- [ ] passport实现用户鉴权、扫码登录
+- [x] 日志集成链路追踪
+- [x] 上传文件Demo
+- [x] 分片上传、下载文件Demo 
+- [ ] 验签
+- [ ] 用户鉴权
+  - [x] 账号密码登录
+  - [x] Github登录
+  - [ ] 扫码登录
+  - [ ] 邮箱/短信验证登录
+  - [ ] 登录审计（判定是否常用 IP 、邮件通知）
 - [ ] 微服务、Monorepo模版
+- [ ] 集成爬虫模块
 
 
 ## 集成工具
@@ -31,7 +39,7 @@ Typeorm使用nest提供的动态模块
 项目中将Redis也封装为了动态模块
 ```ts
 export class Xxx {
-  @Inject('REDIS')
+  @Inject()
   private readonly redis: Redis;
 }
 ```
@@ -40,7 +48,7 @@ export class Xxx {
 参考接口：/axios-example
 ```ts
 export class Xxx {
-  @Inject('axios')
+  @Inject('Axios')
   private readonly axios: AxiosInstance;
 }
 ```
@@ -52,17 +60,24 @@ export class Xxx {
   private readonly logger: CustomLogger;
 }
 ```
-发起三方请求、响应日志已集成到日志中(使用Axios发起请求)
-```text
-[Nest] [2024-07-16 00:21:38] [info] [外部请求] [GET][https://httpbin.org/get]
-[Nest] [2024-07-16 00:21:39] [info] [外部响应] [GET][https://httpbin.org/get][200] 接口响应内容
-```
+
 项目接口请求、响应日志已集成到日志中
 ```text
-[Nest] [2024-07-16 00:24:14] [info] [请求] [POST][/user/login]
-[Nest] [2024-07-16 00:24:14] [info] [响应] [POST][/user/login][201]{"code":0,"data":null,"msg":"ok"}
+[Nest] [2024-07-17 10:25:56.913] [2e81f11d-d3d6-45f1-b692-53f07c175fde] [info] [请求] [POST][/user/login]
+[Nest] [2024-07-17 10:25:56.929] [2e81f11d-d3d6-45f1-b692-53f07c175fde] [info] [响应] [POST][/user/login][201] 接口响应内容
 ```
 提供装饰器 @NoResponseLog() 关闭项目接口响应日志
+
+发起三方请求、响应日志已集成到日志中(使用Axios发起请求)
+```text
+[Nest] [2024-07-17 10:27:10.126] [616864ba-45f6-4768-8747-c66ad5e97e46] [info] [外部请求] [GET][https://httpbin.org/get]
+[Nest] [2024-07-17 10:27:11.326] [616864ba-45f6-4768-8747-c66ad5e97e46] [info] [外部响应] [GET][https://httpbin.org/get][200] 接口响应内容
+```
+
+日志已集成traceId链路追踪
+```text
+Console输出第三位 [616864ba-45f6-4768-8747-c66ad5e97e46] 就是traceId
+```
 
 ### 静态资源服务器
 资源放置于 /src/public/ 目录下

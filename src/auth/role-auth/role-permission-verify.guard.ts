@@ -3,25 +3,29 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { isDefined } from 'class-validator';
-import { UserService } from './user.service';
+import { CustomLogger } from '@/common/logger/logger.module';
+import { AuthedRequest } from '../types/auth-request.type';
+import { Request } from 'express';
+import { RoleAuthService } from './role-auth.service';
+import { UnauthorizedAuthException } from '@/common/exception/auth.exception';
 
 @Injectable()
-export class PermissionGuard implements CanActivate {
-  @Inject(Reflector)
+export class RolePermissionVerifyGuard implements CanActivate {
+  @Inject()
   private readonly reflector: Reflector;
 
-  @Inject(UserService)
-  private readonly userService: UserService;
+  @Inject()
+  private readonly roleAuthService: RoleAuthService;
+
+  @Inject()
+  private readonly logger: CustomLogger;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const host = context.switchToHttp();
 
-    const request: Request = host.getRequest();
+    const request: AuthedRequest | Request = host.getRequest();
 
     const requirePermission = this.reflector.getAllAndOverride(
       'require-permission',
@@ -35,22 +39,23 @@ export class PermissionGuard implements CanActivate {
 
     // 设置权限
     // 获取当其用户权限
-    if (!isDefined(request.userId)) {
+    if (!('userId' in request.user)) {
       // 登录守卫会设置用户信息
-      throw new UnauthorizedException(
-        '设置权限需用户登陆，handler需增加@RequireLogin()',
-      );
+      throw new UnauthorizedAuthException({
+        message: '设置权限需用户登陆，handler需增加@RequireLogin()',
+      });
     }
 
-    const userId = request.userId;
-    const roles = (await this.userService.findRolesByUserId(userId))?.roles;
+    const userId = request.user.userId;
+    const roles = (await this.roleAuthService.findRolesByUserId(userId))?.roles;
 
     if (roles.length === 0) {
-      throw new UnauthorizedException('该用户暂未分配角色');
+      this.logger.log(`userId:${userId},未分配角色`, 'PermissionGuard');
+      throw new UnauthorizedAuthException({ message: '该用户暂未分配角色' });
     }
 
     const rolesJoinPermissions =
-      await this.userService.findPermissionsByRoleIds(
+      await this.roleAuthService.findPermissionsByRoleIds(
         roles.map((item) => item.id),
       );
 

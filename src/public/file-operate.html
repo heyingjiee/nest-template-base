@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>文件操作</title>
+  <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+</head>
+<body>
+  <div>
+    <h1>上传</h1>
+    <div>上传文件请求的Content-Type:multipart/form-data类型，其本质仍是key:value形式。只不过value不仅可以是基本数据，还可以是一个或多个文件</div>
+    <div style="display: flex;flex-direction: column">
+      <h3>上传单文件</h3>
+      <input id="singleFileInput" type="file" />
+      <script>
+        const singleFileInput = document.querySelector('#singleFileInput');
+        singleFileInput.onchange=async ()=> {
+          const data = new FormData();
+          data.set('name','hedaodao'); // 这里是普通key、value
+          data.set('fileData', singleFileInput.files[0]); // file数组，单选就是第一个元素
+          await axios.post('http://localhost:3000/file-operate/single-upload', data);
+        }
+      </script>
+    </div>
+
+    <div style="display: flex;flex-direction: column">
+      <h3>上传多文件（multiple属性）</h3>
+      <div>按住command可以多选哦</div>
+      <input id="multiFileInput" type="file" multiple/>
+      <script>
+
+        const multiFileInput = document.querySelector('#multiFileInput');
+        multiFileInput.onchange=async ()=> {
+          const data = new FormData();
+          data.set('name','hedaodao'); // 这里是普通key、value
+          [...multiFileInput.files].forEach(file => {
+            data.append('fileData', file)  // append如果key不存在就创建，存在就是追加。所以一个key能携带多个文件
+          })
+          await axios.post('/file-operate/multi-upload', data);
+        }
+      </script>
+    </div>
+
+
+    <div style="display: flex;flex-direction: column">
+      <h3>单文件分片上传</h3>
+      <div>本质使用slice分割Blob数据，注意：Blob的基本单位是字节（blob.size(),blob.slice(start,end)）</div>
+      <input id="sliceFileInput" type="file"/>
+      <script>
+
+        const sliceFileInput = document.querySelector('#sliceFileInput');
+
+        const chunkSize=50*1024
+
+        sliceFileInput.onchange=async ()=> {
+
+          let file=sliceFileInput.files[0]
+          console.log('file',file)
+
+          let chunks=[]
+          let startPos=0
+          while (startPos <= file.size){
+            chunks.push(file.slice(startPos,startPos+chunkSize))
+            startPos+=chunkSize
+          }
+
+          chunks.forEach((chunk,index)=>{
+            const data = new FormData();
+            data.set('name',`${file.name}-${index}`);
+            data.append('fileData',chunk)
+            axios.post('/file-operate/slice-upload', data);
+          })
+
+        }
+      </script>
+    </div>
+
+    <h1>下载</h1>
+    <div>直接使用浏览器访问请求地址，浏览器就会弹出下载保存窗口。在代码中通过 window.open('xxxx')也是同样的效果。 但是如果想要在不离开页面的情况下，下载就需要使用blob了</div>
+    <div style="display: flex;flex-direction: column">
+      <h3>下载单文件</h3>
+      <div style="display: flex">
+        <button id="singleFileDownload" style="width: fit-content;margin-right: 20px">完整下载</button>
+        <button id="streamFileDownload" style="width: fit-content">流下载</button>
+      </div>
+      <h3>多文件压缩</h3>
+      <div style="display: flex">
+        <button id="compressFileDownload" style="width: fit-content">压缩包下载</button>
+      </div>
+      <script>
+        const singleFileDownload = document.querySelector('#singleFileDownload');
+        singleFileDownload.onclick=async ()=> {
+          const res=await axios.get('/file-operate/single-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'image/jpeg',filename)
+        }
+
+
+        const streamFileDownload = document.querySelector('#streamFileDownload');
+        streamFileDownload.onclick=async ()=> {
+          const res=await axios.get('/file-operate/stream-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'image/jpeg',filename)
+        }
+
+
+        const compressFileDownload = document.querySelector('#compressFileDownload');
+        compressFileDownload.onclick=async ()=> {
+          const res=await axios.get('/file-operate/compress-stream-download',{ responseType: 'blob'});
+          const filename= res.headers['content-disposition'].match(/filename="(.*)"$/)[1]
+          console.log(res,filename);
+          download(res.data,'application/zip',filename)
+        }
+
+        function download(data,type,filename){
+          const blob=  new Blob([data],{type})
+          const url =  URL.createObjectURL(blob)
+
+          const downloadEle= document.createElement('a')
+          downloadEle.href=url
+          downloadEle.style.display='none'
+          downloadEle.download=filename
+          document.body.appendChild(downloadEle)
+          downloadEle.click()
+          document.body.removeChild(downloadEle)
+          URL.revokeObjectURL(url)
+
+        }
+      </script>
+    </div>
+  </div>
+
+
+</body>
+</html>

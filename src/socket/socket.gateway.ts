@@ -6,10 +6,14 @@ import {
 import { SocketService } from './socket.service';
 import { UpdateSocketDto } from './dto/update-socket.dto';
 import { Observable } from 'rxjs';
+import { Inject } from '@nestjs/common';
+import { CustomLogger } from '../common/logger/logger.module';
 
 // 声明处理 websocket 的类。websocket服务的地址、端口与项目一致
 @WebSocketGateway()
 export class SocketGateway {
+  @Inject()
+  private readonly logger: CustomLogger;
   constructor(private readonly socketService: SocketService) {}
 
   // websocket接口地址
@@ -23,7 +27,7 @@ export class SocketGateway {
       }, 2000);
 
       return () => {
-        console.log('客户端断开连接');
+        this.logger.log('客户端断开连接', 'WebSocketGateway');
       };
     });
   }

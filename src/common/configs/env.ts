@@ -1,9 +1,14 @@
-import { User } from '../../user/entities/user.entity';
-import { Role } from '../../user/entities/role.entity';
-import { Permission } from '../../user/entities/permission.entity';
+import { User } from '@/user/entities/user.entity';
+import { Role } from '@/auth/role-auth/entities/role.entity';
+import { Permission } from '@/auth/role-auth/entities/permission.entity';
 
 export default {
   dev: {
+    port: 3000,
+    JWTConfig: {
+      secret: 'hedaodao',
+      expire: '7d',
+    },
     redisConfig: {
       host: '127.0.0.1',
       port: 6379,
@@ -23,6 +28,11 @@ export default {
     },
   },
   qa: {
+    port: 3000,
+    JWTConfig: {
+      secret: 'hedaodao',
+      expire: '7d',
+    },
     redisConfig: {
       host: '127.0.0.1',
       port: 6379,
@@ -43,6 +53,11 @@ export default {
     },
   },
   prod: {
+    port: 3000,
+    JWTConfig: {
+      secret: 'hedaodao',
+      expire: '7d',
+    },
     redisConfig: {
       host: '10.0.16.11',
       port: 6379,
