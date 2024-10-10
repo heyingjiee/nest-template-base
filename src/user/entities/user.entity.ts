@@ -26,6 +26,14 @@ export class User {
 
   @Column({
     length: 50,
+    comment: '邮箱',
+    nullable: true,
+  })
+  @ApiProperty()
+  email: string;
+
+  @Column({
+    length: 50,
     nullable: true,
     comment: '密码', // Github授权登陆创建的用户密码就是空的
   })
@@ -39,6 +47,12 @@ export class User {
   })
   @ApiProperty()
   githubId: string;
+
+  // @Column({
+  //   comment: '上次登录IP',
+  // })
+  // @ApiProperty()
+  // lastLoginIP: string;
 
   @CreateDateColumn({
     comment: '创建时间',

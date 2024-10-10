@@ -21,6 +21,7 @@ import { GlobalResponseInterceptor } from './common/interceptor/global-response.
 import { AuthModule } from './auth/auth.module';
 import { JwtVerifyGuard } from './auth/jwt-auth/jwt-verify.guard';
 import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-verify.guard';
+import { CheckSignGuard } from '@/common/guard/check-sign.guard';
 
 @Module({
   imports: [
@@ -69,14 +70,17 @@ import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-veri
   controllers: [AppController],
   providers: [
     AppService,
-    // 全局JWT校验路由守卫，默认全部开启，使用@isPublic可跳过该守卫
+    // 守卫
     {
-      provide: 'APP_GUARD',
+      provide: 'APP_GUARD', // 全局验签
+      useClass: CheckSignGuard,
+    },
+    {
+      provide: 'APP_GUARD', // 全局JWT校验路由守卫，默认全部开启，使用@isPublic可跳过该守卫
       useClass: JwtVerifyGuard,
     },
-    // 全局角色权限守卫，只对@RequirePermission()开启
     {
-      provide: 'APP_GUARD',
+      provide: 'APP_GUARD', // 全局角色权限守卫，只对@RequirePermission()开启
       useClass: RolePermissionVerifyGuard,
     },
     // 错误过滤器
@@ -86,7 +90,7 @@ import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-veri
     },
     // 拦截器
     {
-      provide: 'APP_INTERCEPTOR',
+      provide: 'APP_INTERCEPTOR', // 格式化返回值
       useClass: GlobalResponseInterceptor,
     },
   ],

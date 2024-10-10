@@ -1,4 +1,11 @@
-import { Controller, Get, Inject, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { responseSuccess } from '../../utils/responseUtil';
 import { JwtService } from '@nestjs/jwt';
@@ -12,6 +19,7 @@ import {
 import { GithubRegisterUserDto } from './dto/register-user.dto';
 import { GithubAuthService } from './github-auth.service';
 import { GithubVerifyGuard } from '@/auth/github-auth/github-verify.guard';
+import { LoginAuditInterceptor } from '@/auth/interceptor/login-audit.interceptor';
 
 @ApiTags('auth/github')
 @IsPublic()
@@ -42,6 +50,7 @@ export class GithubAuthController {
     type: String,
   })
   @UseGuards(GithubVerifyGuard)
+  @UseInterceptors(LoginAuditInterceptor)
   @Get('login')
   async loginByGithub(
     @Req() req: AuthedRequest<GithubUserPassport | UserPassport>,

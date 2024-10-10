@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { AuthedRequest } from '../types/auth-request.type';
 import { LocalRegisterUserDto } from './dto/register-user.dto';
 import { LocalLoginUserDto } from './dto/login-user.dto';
 import { LocalAuthService } from './local-auth.service';
+import { LoginAuditInterceptor } from '@/auth/interceptor/login-audit.interceptor';
 
 @ApiTags('auth/local')
 @IsPublic()
@@ -33,6 +35,7 @@ export class LocalAuthController {
   @ApiOperation({ summary: '账号密码登录' })
   @ApiBody({ type: LocalLoginUserDto })
   @UseGuards(AuthGuard('local'))
+  @UseInterceptors(LoginAuditInterceptor)
   @Post('login')
   async loginByLocal(@Req() req: AuthedRequest) {
     const { userId, username } = req.user;
@@ -51,7 +54,6 @@ export class LocalAuthController {
 
   @ApiOperation({ summary: '注册接口', description: '用于用户注册' })
   @ApiBody({ type: LocalRegisterUserDto })
-  @IsPublic()
   @Post('register')
   async register(
     @Body(ValidationPipe) localRegisterUserDto: LocalRegisterUserDto,

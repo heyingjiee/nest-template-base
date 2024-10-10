@@ -15,8 +15,8 @@ import { RoleAuthService } from '@/auth/role-auth/role-auth.service';
 import { CreateRoleDto } from '@/auth/role-auth/dto/role.dto';
 import { responseSuccess } from '@/utils/responseUtil';
 import { ParamVerifyFailException } from '@/common/exception/common.exception';
-import { ResponseType } from '@/common/type/response.interface';
 import { Role } from '@/auth/role-auth/entities/role.entity';
+import { IsPublic } from '@/auth/decorator/is-public.decorator';
 
 // 注意角色鉴权需要先验证JWT，所以不加@IsPublic()装饰器跳过JWT验证
 @ApiTags('auth/role')
@@ -47,6 +47,7 @@ export class RoleController {
     await this.roleAuthService.deleteRoleById(roleId);
     return responseSuccess(null);
   }
+
   @ApiOperation({ summary: '查询全部角色' })
   @Get('')
   async queryAllRole() {
