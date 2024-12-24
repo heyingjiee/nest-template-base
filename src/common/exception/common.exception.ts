@@ -21,7 +21,7 @@ export class CommonException extends BusinessBaseException {
  * 验签失败 checkFailException
  */
 
-export class CheckFailException extends CommonException {
+export class CheckSignFailException extends CommonException {
   constructor(exceptionDate?: Partial<BusinessExceptionDataType>) {
     super({
       code: '010100',
@@ -31,14 +31,26 @@ export class CheckFailException extends CommonException {
     });
   }
 }
-
+/**
+ * 请求过期异常
+ */
+export class TimeOverdueException extends CommonException {
+  constructor(exceptionDate?: Partial<BusinessExceptionDataType>) {
+    super({
+      code: '010200',
+      data: null,
+      message: '请求已过期',
+      ...exceptionDate,
+    });
+  }
+}
 /**
  * 参数检验失败
  */
 export class ParamVerifyFailException extends CommonException {
   constructor(exceptionDate?: Partial<BusinessExceptionDataType>) {
     super({
-      code: '010200',
+      code: '010300',
       data: null,
       message: '参数校验失败',
       ...exceptionDate,

@@ -32,6 +32,11 @@ export class RolePermissionVerifyGuard implements CanActivate {
       [context.getClass(), context.getHandler()],
     ) as string[] | undefined;
 
+    this.logger.log(
+      `角色鉴权: ${!!requirePermission?.length}｜接口权限列表: ${requirePermission ?? []}`,
+      RolePermissionVerifyGuard.name,
+    );
+
     // 未设置权限，直接放行
     if (!requirePermission) {
       return true;
@@ -50,7 +55,7 @@ export class RolePermissionVerifyGuard implements CanActivate {
     const roles = (await this.roleAuthService.findRolesByUserId(userId))?.roles;
 
     if (roles.length === 0) {
-      this.logger.log(`userId:${userId},未分配角色`, 'PermissionGuard');
+      this.logger.log(`userId:${userId},该用户暂未分配角色`, 'PermissionGuard');
       throw new UnauthorizedAuthException({ message: '该用户暂未分配角色' });
     }
 

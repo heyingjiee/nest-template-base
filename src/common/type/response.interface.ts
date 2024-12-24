@@ -13,6 +13,6 @@ export class IPLocateType {
   region: string;
   regionName: string;
   regionCode: string;
-  addr: Buffer;
+  addr: string;
   err: string;
 }

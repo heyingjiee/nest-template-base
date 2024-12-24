@@ -15,7 +15,7 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
   private readonly reflector: Reflector;
 
   @Inject()
-  private readonly Logger: CustomLogger;
+  private readonly logger: CustomLogger;
 
   // 命中守卫，就会执行canActivate。返回 true 就会继续执行
   canActivate(
@@ -26,6 +26,8 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
       context.getClass(), // 获取class的元数据
       context.getHandler(), // 获取handler的元数据
     ]) as boolean | undefined;
+
+    this.logger.log(`JWT鉴权:${isPublic ?? true}`, JwtVerifyGuard.name);
 
     // 无需登录接口，直接放行
     if (isPublic) {
@@ -38,8 +40,9 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
 
   // 验证逻辑处理后会调用到这里。因为默认抛出的错误message 是英文，所以这里重写下抛出错误逻辑
   handleRequest(err: any, user: any, info: any) {
-    // 参数：err 错误对象（没有就是 null）, user 用户信息（没有就是 null）, info 验证信息（失败就是自定义的 Error）, context: ExecutionContext
-    this.Logger.log(
+    // 参数：err 错误对象（没有就是 null）, user 用户信息（UserPassport|false|null）, info 验证信息（失败就是自定义的 Error）, context: ExecutionContext
+
+    this.logger.log(
       `err:${err} | user:${user} | info:${JSON.stringify(info)}`,
       JwtVerifyGuard.name,
     );

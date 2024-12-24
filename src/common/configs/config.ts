@@ -19,7 +19,9 @@ if (!existsSync(rootPeerDir)) {
 const sourceDir = `${rootDir}/src`;
 
 const envConfig: GlobalEnvConfigType = env[process.env.NODE_ENV];
-console.log(`环境:${process.env.NODE_ENV} | 端口：${envConfig.port}`);
+console.log(
+  `环境:${process.env.NODE_ENV} | 端口：${envConfig.serverConfig.port}`,
+);
 
 const appConfig: GlobalConfigType = {
   rootDir,

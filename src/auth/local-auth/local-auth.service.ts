@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as md5 from 'md5';
-import { User } from '../../user/entities/user.entity';
+import { User } from '@/user/entities/user.entity';
 import { LocalRegisterUserDto } from './dto/register-user.dto';
 import { LocalLoginUserDto } from './dto/login-user.dto';
 

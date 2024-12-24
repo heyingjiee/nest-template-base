@@ -4,7 +4,12 @@ import { Permission } from '@/auth/role-auth/entities/permission.entity';
 
 export default {
   dev: {
-    port: 3000,
+    signConfig: {
+      key: 'xy#a76R5Tr',
+    },
+    serverConfig: {
+      port: 3000,
+    },
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',
@@ -28,7 +33,12 @@ export default {
     },
   },
   qa: {
-    port: 3000,
+    signConfig: {
+      key: 'xy#a76R5Tr',
+    },
+    server: {
+      port: 3000,
+    },
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',
@@ -53,7 +63,12 @@ export default {
     },
   },
   prod: {
-    port: 3000,
+    signConfig: {
+      key: 'xy#uyx9o1T',
+    },
+    server: {
+      port: 3000,
+    },
     JWTConfig: {
       secret: 'hedaodao',
       expire: '7d',

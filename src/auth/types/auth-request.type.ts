@@ -11,6 +11,7 @@ export interface GithubUserPassport {
   profile: Profile;
 }
 
+// 已授权的 Request 请求类型
 export interface AuthedRequest<T = UserPassport> extends Request {
   user: T;
 }

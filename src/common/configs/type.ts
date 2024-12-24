@@ -1,6 +1,12 @@
 import { RedisOptions } from 'ioredis/built/redis/RedisOptions';
 import { DataSourceOptions } from 'typeorm';
 
+export interface SignConfig {
+  key: string;
+}
+export interface ServerConfig {
+  port: number;
+}
 export interface JWTOption {
   secret: string;
   expire: string;
@@ -22,8 +28,10 @@ export interface GlobalConfigType extends GlobalEnvConfigType {
 }
 
 export interface GlobalEnvConfigType {
-  // 启动端口
-  port: number;
+  // 签名配置
+  signConfig: SignConfig;
+  // 服务配置
+  serverConfig: ServerConfig;
   // redis配置
   redisConfig: RedisOptions;
   // 数据库配置

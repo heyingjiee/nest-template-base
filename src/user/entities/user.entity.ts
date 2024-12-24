@@ -48,11 +48,23 @@ export class User {
   @ApiProperty()
   githubId: string;
 
-  // @Column({
-  //   comment: '上次登录IP',
-  // })
-  // @ApiProperty()
-  // lastLoginIP: string;
+  @Column({
+    nullable: true,
+    comment: '最后一次登录IP',
+  })
+  lastLoginIP: string;
+
+  @Column({
+    nullable: true,
+    comment: '最后一次登录位置',
+  })
+  lastLoginAddr: string;
+
+  @Column({
+    nullable: true,
+    comment: '最后一次登录时间',
+  })
+  lastLoginTime: Date;
 
   @CreateDateColumn({
     comment: '创建时间',

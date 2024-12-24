@@ -13,9 +13,10 @@ import {
   RoleController,
   PermissionController,
 } from './role-auth/controller/index';
+import { UserModule } from '@/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), UserModule],
   controllers: [
     LocalAuthController,
     GithubAuthController,

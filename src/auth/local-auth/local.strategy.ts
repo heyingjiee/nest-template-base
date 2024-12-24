@@ -2,14 +2,14 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { User } from '../../user/entities/user.entity';
+import { User } from '@/user/entities/user.entity';
 import { LocalLoginUserDto } from './dto/login-user.dto';
 import { LocalAuthService } from './local-auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   @Inject()
-  private readonly localService: LocalAuthService;
+  private readonly localAuthService: LocalAuthService;
   constructor() {
     super({
       passReqToCallback: true, // 设置这个后。validate的第一个参数是request对象
@@ -21,7 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     const localLoginUserDto: LocalLoginUserDto = { username, password };
 
-    const userInfo: User = await this.localService.login(localLoginUserDto);
+    const userInfo: User = await this.localAuthService.login(localLoginUserDto);
 
     return { userId: userInfo.id, username: userInfo.username };
   }

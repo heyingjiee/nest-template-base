@@ -22,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtVerifyGuard } from './auth/jwt-auth/jwt-verify.guard';
 import { RolePermissionVerifyGuard } from '@/auth/role-auth/role-permission-verify.guard';
 import { CheckSignGuard } from '@/common/guard/check-sign.guard';
+import process from 'node:process';
 
 @Module({
   imports: [

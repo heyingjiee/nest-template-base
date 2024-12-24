@@ -16,6 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { responseSuccess } from '../utils/responseUtil';
 import { customFileTypeValidator } from './file.validator';
 import { storage } from './file-interceptor.storage';
+import appConfig from '@/common/configs/config';
 
 @ApiTags('file-upload')
 @Controller('file-upload')
@@ -63,7 +64,7 @@ export class UploadController {
     // 1、取一个key
     // fileData是key，这个key对应的value最多3个文件
     FilesInterceptor('fileData', 3, {
-      dest: 'uploads', // 相对项目根路径
+      dest: `${appConfig.uploadDir}`, // 相对项目根路径
       limits: {
         fileSize: 1024, //fileSize单文件限制 单位是B
         // fieldSize:xxx  value下全部文件大小之和的限制
