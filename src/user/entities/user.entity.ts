@@ -7,14 +7,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../auth/role-auth/entities/role.entity';
+import { Role } from '@/auth/role-auth/entities/role.entity';
 import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn({ comment: '用户id' })
-  @Exclude()
   id: number;
 
   @Column({

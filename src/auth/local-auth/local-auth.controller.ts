@@ -47,9 +47,7 @@ export class LocalAuthController {
       { expiresIn: appConfig.JWTConfig.expire },
     );
 
-    return responseSuccess({
-      token,
-    });
+    return responseSuccess({ token });
   }
 
   @ApiOperation({ summary: '注册接口', description: '用于用户注册' })

@@ -60,6 +60,17 @@ export class ForbiddenAuthException extends AuthException {
   }
 }
 
+export class UserNoneExistException extends AuthException {
+  constructor(exceptionDate?: Partial<BusinessExceptionDataType>) {
+    super({
+      code: '020102',
+      data: null,
+      message: '用户不存在',
+      ...exceptionDate,
+    });
+  }
+}
+
 /**
  * 当前角色已存在
  */

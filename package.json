@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "hedaodao",
   "scripts": {
+    "prepare": "husky",
     "build": "./scripts/build.sh",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:qa": "cross-env NODE_ENV=qa ./scripts/start.sh",

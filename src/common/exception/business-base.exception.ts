@@ -20,6 +20,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
  *        三级类目：02 - 鉴权失败 （身份认证成功，但是该用户没有权限） ForbiddenException 403
  *    二级类目：01 - 用户类
  *        三级类目：01 - 用户已存在
+ *        三级类目：02 - 用户不存在
  *    二级类目：02 - 角色类
  *        三级类目：01 - 角色已存在
  *        三级类目：02 - 角色不存在

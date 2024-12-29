@@ -27,7 +27,7 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
       context.getHandler(), // 获取handler的元数据
     ]) as boolean | undefined;
 
-    this.logger.log(`JWT鉴权:${isPublic ?? true}`, JwtVerifyGuard.name);
+    this.logger.log(`JWT鉴权状态:${!isPublic}`, JwtVerifyGuard.name);
 
     // 无需登录接口，直接放行
     if (isPublic) {
@@ -43,7 +43,7 @@ export class JwtVerifyGuard extends AuthGuard('jwt') {
     // 参数：err 错误对象（没有就是 null）, user 用户信息（UserPassport|false|null）, info 验证信息（失败就是自定义的 Error）, context: ExecutionContext
 
     this.logger.log(
-      `err:${err} | user:${user} | info:${JSON.stringify(info)}`,
+      `err:${err} | user:${JSON.stringify(user)} | info:${JSON.stringify(info)}`,
       JwtVerifyGuard.name,
     );
     // 自定义错误处理逻辑

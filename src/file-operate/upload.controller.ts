@@ -10,10 +10,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileOperateService } from './file-operate.service';
-import { CustomLogger } from '../common/logger/logger.module';
+import { CustomLogger } from '@/common/logger/logger.module';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { responseSuccess } from '../utils/responseUtil';
+import { responseSuccess } from '@/utils/responseUtil';
 import { customFileTypeValidator } from './file.validator';
 import { storage } from './file-interceptor.storage';
 import appConfig from '@/common/configs/config';

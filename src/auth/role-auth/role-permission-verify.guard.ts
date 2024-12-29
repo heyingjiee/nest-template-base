@@ -33,7 +33,7 @@ export class RolePermissionVerifyGuard implements CanActivate {
     ) as string[] | undefined;
 
     this.logger.log(
-      `角色鉴权: ${!!requirePermission?.length}｜接口权限列表: ${requirePermission ?? []}`,
+      `角色鉴权状态:${!!requirePermission?.length}｜接口权限列表: ${requirePermission ?? []}`,
       RolePermissionVerifyGuard.name,
     );
 

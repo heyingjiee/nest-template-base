@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { responseSuccess } from '../../utils/responseUtil';
+import { responseSuccess } from '@/utils/responseUtil';
 import { JwtService } from '@nestjs/jwt';
 import appConfig from '../../common/configs/config';
 import { IsPublic } from '../decorator/is-public.decorator';

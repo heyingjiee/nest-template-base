@@ -28,7 +28,7 @@ export class GithubVerifyGuard extends AuthGuard('github') {
   handleRequest(err: any, user: any, info: any) {
     // 参数：err 错误对象（没有就是 null）, user 用户信息（没有就是 null）, info 验证信息（失败就是自定义的 Error）, context: ExecutionContext
     this.Logger.log(
-      `err:${err} | user:${user} | info:${JSON.stringify(info)}`,
+      `err:${err} | user:${JSON.stringify(user)} | info:${JSON.stringify(info)}`,
       GithubVerifyGuard.name,
     );
     // 自定义错误处理逻辑

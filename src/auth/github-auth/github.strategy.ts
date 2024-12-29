@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-github2';
-import { CustomLogger } from '../../common/logger/logger.module';
+import { CustomLogger } from '@/common/logger/logger.module';
 import { GithubUserPassport, UserPassport } from '../types/auth-request.type';
 import { RoleAuthService } from '@/auth/role-auth/role-auth.service';
 import { UnauthorizedAuthException } from '@/common/exception/auth.exception';
@@ -18,7 +18,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: 'Ov23lidkuhTCj7GcX4Xc',
       clientSecret: '24dcd69755dbc318ec5d74ed1dabd87a84a9187c',
-      callbackURL: 'http://localhost:3000/auth/github-login', // 这里回调地址就是github后台配置的回调地址。在Github授权页中授权成功后，会回跳这个地址，一般是前端项目的页面
+      callbackURL: 'http://localhost:3000/auth/github/login', // 这里回调地址就是github后台配置的回调地址。在Github授权页中授权成功后，会回跳这个地址，一般是前端项目的页面
       scope: ['public_profile'], // scope 是请求的信息
     });
   }
