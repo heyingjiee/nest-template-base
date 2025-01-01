@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "hedaodao",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "npx husky",
     "build": "./scripts/build.sh",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:qa": "cross-env NODE_ENV=qa ./scripts/start.sh",
@@ -93,7 +93,6 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "husky": "^8.0.0",
     "jest": "^29.5.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.0.0",
