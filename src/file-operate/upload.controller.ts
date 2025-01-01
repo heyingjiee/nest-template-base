@@ -64,9 +64,9 @@ export class UploadController {
     // 1、取一个key
     // fileData是key，这个key对应的value最多3个文件
     FilesInterceptor('fileData', 3, {
-      dest: `${appConfig.uploadDir}`, // 相对项目根路径
+      dest: `${appConfig.uploadDir}/multi`, // 相对项目根路径
       limits: {
-        fileSize: 1024, //fileSize单文件限制 单位是B
+        fileSize: 100 * 1024, //fileSize单文件限制 单位是B
         // fieldSize:xxx  value下全部文件大小之和的限制
       },
     }),
