@@ -16,7 +16,6 @@ import { CreateRoleDto } from '@/auth/role-auth/dto/role.dto';
 import { responseSuccess } from '@/utils/responseUtil';
 import { ParamVerifyFailException } from '@/common/exception/common.exception';
 import { Role } from '@/auth/role-auth/entities/role.entity';
-import { IsPublic } from '@/auth/decorator/is-public.decorator';
 
 // 注意角色鉴权需要先验证JWT，所以不加@IsPublic()装饰器跳过JWT验证
 @ApiTags('auth/role')

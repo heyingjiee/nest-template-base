@@ -4,7 +4,9 @@ RUN mkdir /app
 WORKDIR /app
 COPY . .
 
-RUN npm config set registry https://registry.npmmirror.com && npm install -g pnpm && npm install -g pm2 && pnpm install --production
+# --ignore-scripts 是用来忽略 prepare 脚本的，install时会触发 husky ，但其生产依赖中没有所以会报错
+RUN npm config set registry https://registry.npmmirror.com && npm install -g pnpm && npm install -g pm2 && pnpm install --production --ignore-scripts
+
 
 EXPOSE 3000
 

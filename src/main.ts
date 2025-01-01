@@ -5,7 +5,6 @@ import { CustomLogger } from './common/logger/logger.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as process from 'node:process';
 import appConfig from '@/common/configs/config';
-import { ServerConfig } from '@/common/configs/type';
 
 async function bootstrap() {
   // 如何需要支持Https，可以在这里配置证书

@@ -6,7 +6,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { Request } from 'express';
 import * as requestIp from 'request-ip';
 import * as iconvLite from 'iconv-lite';
 import { AxiosInstance } from 'axios';
@@ -14,7 +13,6 @@ import { CustomLogger } from '@/common/logger/logger.module';
 import { IPLocateType } from '@/common/type/response.interface';
 import { UserService } from '@/user/user.service';
 import { AuthedRequest } from '@/auth/types/auth-request.type';
-import { getClientIp } from 'request-ip';
 
 // 登录审计
 @Injectable()
