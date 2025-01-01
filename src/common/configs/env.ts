@@ -36,7 +36,7 @@ export default {
     signConfig: {
       key: 'xy#a76R5Tr',
     },
-    server: {
+    serverConfig: {
       port: 3000,
     },
     JWTConfig: {
@@ -66,7 +66,7 @@ export default {
     signConfig: {
       key: 'xy#uyx9o1T',
     },
-    server: {
+    serverConfig: {
       port: 3000,
     },
     JWTConfig: {
