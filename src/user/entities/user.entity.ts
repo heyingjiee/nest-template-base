@@ -7,14 +7,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from './role.entity';
+import { Role } from '@/auth/role-auth/entities/role.entity';
 import { Exclude } from 'class-transformer';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn({ comment: '用户id' })
-  @Exclude()
   id: number;
 
   @Column({
@@ -26,11 +25,45 @@ export class User {
 
   @Column({
     length: 50,
-    comment: '密码',
+    comment: '邮箱',
+    nullable: true,
   })
-  @ApiHideProperty()
+  @ApiProperty()
+  email: string;
+
+  @Column({
+    length: 50,
+    nullable: true,
+    comment: '密码', // Github授权登陆创建的用户密码就是空的
+  })
   @Exclude()
   password: string;
+
+  @Column({
+    length: 50,
+    nullable: true,
+    comment: 'githubId',
+  })
+  @ApiProperty()
+  githubId: string;
+
+  @Column({
+    nullable: true,
+    comment: '最后一次登录IP',
+  })
+  lastLoginIP: string;
+
+  @Column({
+    nullable: true,
+    comment: '最后一次登录位置',
+  })
+  lastLoginAddr: string;
+
+  @Column({
+    nullable: true,
+    comment: '最后一次登录时间',
+  })
+  lastLoginTime: Date;
 
   @CreateDateColumn({
     comment: '创建时间',

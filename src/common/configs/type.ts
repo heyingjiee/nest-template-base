@@ -1,19 +1,40 @@
 import { RedisOptions } from 'ioredis/built/redis/RedisOptions';
 import { DataSourceOptions } from 'typeorm';
 
-export interface GlobalConfigType extends GlobalEnvConfigType {}
+export interface SignConfig {
+  key: string;
+}
+export interface ServerConfig {
+  port: number;
+}
+export interface JWTOption {
+  secret: string;
+  expire: string;
+}
 
-export interface GlobalEnvConfigType {
+export interface GlobalConfigType extends GlobalEnvConfigType {
   // 项目根路径
   rootDir: string;
   // 项目资源路径
   sourceDir: string;
   // 日志路径
   logDir: string;
+  // 上传文件目录
+  uploadDir: string;
   // 静态资源路径
   staticAssetDir: string;
+  // 项目名
+  applicationName: string;
+}
+
+export interface GlobalEnvConfigType {
+  // 签名配置
+  signConfig: SignConfig;
+  // 服务配置
+  serverConfig: ServerConfig;
   // redis配置
   redisConfig: RedisOptions;
   // 数据库配置
   ormConfig: DataSourceOptions;
+  JWTConfig: JWTOption;
 }

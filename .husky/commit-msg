@@ -1,5 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "===== 校验commit msg格式 ====="
 npx --no-install commitlint --edit
